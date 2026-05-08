@@ -1,0 +1,22 @@
+package parser.integration.public_repos;
+
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
+import org.apache.commons.compress.compressors.CompressorException;
+import parser.integration.IntegrationTestUtils;
+
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
+public class EOSMapsParserTest extends BasePlatformTestCase {
+
+    public void testEOSMapsRepoParsing() throws CompressorException, IOException {
+        final String repositoryZipUrl = "https://github.com/elementary/maps/archive/refs/tags/8.1.0.zip";
+
+        HashSet<String> errorsToIgnore = new HashSet<>(
+            Set.of()
+        );
+
+        IntegrationTestUtils.testRepoSourceFilesForParsingErrors(this.myFixture, repositoryZipUrl, "eos_maps", 0, errorsToIgnore);
+    }
+}
