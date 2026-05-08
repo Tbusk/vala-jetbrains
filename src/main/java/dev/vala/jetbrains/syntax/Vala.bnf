@@ -96,7 +96,6 @@
         PREPROCESSOR_ENDIF='#endif'
         PREPROCESSOR_ELIF='#elif'
 
-        WHITESPACE='regexp:\s+'
         IDENTIFIER_TOKEN='regexp:@?[a-zA-Z_0-9]*@?'
         STRING_LITERAL='regexp:@?\"([^\\\"]|\\.)*\"'
         CHAR_LITERAL="regexp:'([^'\\]|\\.)'"
