@@ -48,11 +48,6 @@
 ### What's Changed
 
 - Added support for 2025.3 IDE versions
-
-## [1.2.5.1-ALPHA]
-
-### What's Changed
-
 - Fixed issue with switch and if statements being formatted incorrectly
 - Updated default new project .editorconfig to use elementary's defaults
 - Fixed parsing issue with numeric literals mistaken for numeric-prefixed identifiers
@@ -200,7 +195,7 @@
 
 - Support for MacOS and Windows platforms with the LSP server.
 
-## 1.0.0-ALPHA
+## [1.0.0-ALPHA]
 
 ### What's Changed
 
