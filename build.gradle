@@ -44,6 +44,9 @@ java {
 def projectRoot = 'dev/vala/jetbrains'
 def projectSourcesRoot = layout.projectDirectory.dir('src/main/java').dir(projectRoot)
 def generatedSourcesDir = layout.projectDirectory.dir('src/main/gen')
+def pluginVersion = providers.gradleProperty('pluginVersion').get()
+
+project.version = pluginVersion
 
 sourceSets {
     main {
@@ -61,7 +64,6 @@ intellijPlatform {
         id = providers.gradleProperty("pluginId").get()
         name = providers.gradleProperty("pluginName").get()
         description = ExtensionsKt.markdownToHTML(file('MarketplaceDescription.md').text, '\n')
-        def pluginVersion = providers.gradleProperty("pluginVersion").get()
 
         project.changelog.version = pluginVersion
 
