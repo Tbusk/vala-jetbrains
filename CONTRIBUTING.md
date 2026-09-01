@@ -11,9 +11,10 @@ Be sure to follow contribution guidelines listed further down in this document.
 
 1. Fork the repository
 2. Clone your forked repository locally.
-3. Make desired changes
-4. Push commits to your repository
-5. Open a pull request to our repo
+3. Create a new branch for your changes.
+4. Make desired changes
+5. Push commits to your repository
+6. Open a pull request to our repository
 
 ### Pull Request Guidelines
 
@@ -33,10 +34,10 @@ The smaller and more focused a PR, the quicker a response will be.
 ### Code Style Guidelines
 
 - Use descriptive identifier names
-- Add javadocs documentation
-- Keep methods small and focused on a single task (< ~12 lines)
-- Keep classes, interfaces, enums, etc. small and focused
-- Add automated tests where possible
+- Add Javadoc documentation
+- Keep methods focused on a single task
+- Keep classes, interfaces, enums, etc. focused
+- Add automated tests where possible, prioritizing unit tests and where necessary to fill in gaps in coverage, integration / e2e tests
 
 ### Commit Guidelines
 
