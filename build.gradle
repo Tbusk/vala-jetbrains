@@ -7,6 +7,7 @@ plugins {
     // versions specified in gradle/libs.versions.toml
     alias(libs.plugins.intelliJPlatform)
     alias(libs.plugins.changelog)
+    alias(libs.plugins.grammarkit)
 }
 
 repositories {
