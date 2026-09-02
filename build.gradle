@@ -12,7 +12,6 @@ plugins {
 
 repositories {
     mavenCentral()
-    mavenLocal()
     intellijPlatform {
         defaultRepositories()
     }
@@ -48,6 +47,9 @@ java {
 def projectRoot = 'dev/vala/jetbrains'
 def projectSourcesRoot = layout.projectDirectory.dir('src/main/java').dir(projectRoot)
 def generatedSourcesDir = layout.projectDirectory.dir('src/main/gen')
+def pluginVersion = providers.gradleProperty('pluginVersion').get()
+
+project.version = pluginVersion
 
 // Parser/Lexer files generate to this src dir
 sourceSets {
@@ -58,29 +60,22 @@ sourceSets {
     }
 }
 
-group = providers.gradleProperty("pluginGroup").get()
-version = providers.gradleProperty("pluginVersion").get()
-
-def projectChangelog = project.changelog
-def pluginDescription = ExtensionsKt.markdownToHTML(file('MarketplaceDescription.md').text, '\n')
-
 // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html#intellijPlatform
 intellijPlatform {
 
     // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html#intellijPlatform-pluginConfiguration
     pluginConfiguration {
-        name = providers.gradleProperty('pluginName')
-        version = providers.gradleProperty('pluginVersion')
-        description = pluginDescription
+        id = providers.gradleProperty('pluginId').get()
+        name = providers.gradleProperty('pluginName').get()
+        description = ExtensionsKt.markdownToHTML(file('MarketplaceDescription.md').text, '\n')
 
-        changeNotes = providers.gradleProperty('pluginVersion').map { pluginVersion ->
-            projectChangelog.renderItem(
-                (projectChangelog.getOrNull(pluginVersion) ?: projectChangelog.getUnreleased())
-                    .withHeader(false)
-                    .withEmptySections(false),
-                Changelog.OutputType.HTML
-            )
-        }
+        project.changelog.version = pluginVersion
+
+        changeNotes = project.changelog.renderItem(
+            (project.changelog.getOrNull(pluginVersion) ?: project.changelog.getUnreleased())
+                .withHeader(false)
+                .withEmptySections(false),
+            Changelog.OutputType.HTML)
 
         // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html#intellijPlatform-pluginConfiguration-ideaVersion
         ideaVersion {
