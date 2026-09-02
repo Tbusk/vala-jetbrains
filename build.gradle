@@ -45,11 +45,15 @@ java {
     }
 }
 
+def projectRoot = 'dev/vala/jetbrains'
+def projectSourcesRoot = layout.projectDirectory.dir('src/main/java').dir(projectRoot)
+def generatedSourcesDir = layout.projectDirectory.dir('src/main/gen')
+
 // Parser/Lexer files generate to this src dir
 sourceSets {
     main {
         java {
-            srcDirs 'src/main/gen'
+            srcDirs generatedSourcesDir
         }
     }
 }
@@ -124,8 +128,27 @@ tasks {
         gradleVersion = providers.gradleProperty('gradleVersion').get()
     }
 
+    // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-tasks.html#publishPlugin
     publishPlugin {
         dependsOn(patchChangelog)
+    }
+
+    // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-tasks.html#generateLexer
+    generateLexer {
+        sourceFile = projectSourcesRoot.file('syntax/Vala.flex')
+        targetRootOutputDir = generatedSourcesDir
+        packageName = "${projectRoot.replace('/', '.')}.lexer"
+        pathToClass = "${projectRoot}/lexer/ValaLexer.java"
+        purgeOldFiles = true
+    }
+
+    // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-tasks.html#generateParser
+    generateParser {
+        sourceFile = projectSourcesRoot.file('syntax/Vala.bnf')
+        targetRootOutputDir = generatedSourcesDir
+        pathToParser = "${projectRoot}/parser/ValaParser.java"
+        pathToPsiRoot = "${projectRoot}/parser/psi"
+        purgeOldFiles = true
     }
 }
 

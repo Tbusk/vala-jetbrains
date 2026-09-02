@@ -1,14 +1,14 @@
 {
-    parserClass="dev.vala.jetbrains.ValaParser"
+    parserClass="dev.vala.jetbrains.parser.ValaParser"
 
     extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
     psiClassPrefix="Vala"
     psiImplClassSuffix="Impl"
-    psiPackage="dev.vala.jetbrains.psi"
-    psiImplPackage="dev.vala.jetbrains.psi.impl"
+    psiPackage="dev.vala.jetbrains.parser.psi"
+    psiImplPackage="dev.vala.jetbrains.parser.psi.impl"
 
-    elementTypeHolderClass="dev.vala.jetbrains.psi.ValaTypes"
+    elementTypeHolderClass="dev.vala.jetbrains.parser.psi.ValaTypes"
     elementTypeClass="dev.vala.jetbrains.psi.ValaElementType"
     tokenTypeClass="dev.vala.jetbrains.psi.ValaTokenType"
 
