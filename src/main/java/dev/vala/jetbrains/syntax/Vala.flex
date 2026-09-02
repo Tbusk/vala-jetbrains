@@ -1,8 +1,8 @@
-package dev.vala.jetbrains;
+package dev.vala.jetbrains.lexer;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
-import dev.vala.jetbrains.psi.ValaTypes;
+import dev.vala.jetbrains.parser.psi.ValaTypes;
 import com.intellij.psi.TokenType;
 import dev.vala.jetbrains.ValaTokenSets;
 import dev.vala.jetbrains.psi.ValaTokenType;

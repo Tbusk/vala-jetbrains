@@ -8,8 +8,8 @@ import dev.vala.jetbrains.highlighting.ValaHighlighter;
 import dev.vala.jetbrains.highlighting.ValaHighlighterUtil;
 import dev.vala.jetbrains.highlighting.ValaSyntaxHighlightingAnnotator;
 import dev.vala.jetbrains.highlighting.ValaTextAttributeKey;
-import dev.vala.jetbrains.psi.ValaTypes;
-import dev.vala.jetbrains.psi.impl.ValaLambdaExpressionImpl;
+import dev.vala.jetbrains.parser.psi.ValaTypes;
+import dev.vala.jetbrains.parser.psi.impl.ValaLambdaExpressionImpl;
 import org.jetbrains.annotations.NotNull;
 
 public final class ValaLambdaExpressionHighlighting implements ValaHighlighter {

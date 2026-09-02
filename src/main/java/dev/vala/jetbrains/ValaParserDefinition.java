@@ -10,9 +10,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
-import dev.vala.jetbrains.psi.ValaTypes;
+import dev.vala.jetbrains.parser.ValaParser;
 import dev.vala.jetbrains.language.ValaFile;
 import dev.vala.jetbrains.language.ValaLanguage;
+import dev.vala.jetbrains.parser.psi.ValaTypes;
 import org.jetbrains.annotations.NotNull;
 
 public class ValaParserDefinition implements ParserDefinition {

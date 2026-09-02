@@ -4,18 +4,23 @@
 [![Version](https://img.shields.io/jetbrains/plugin/v/27464-vala-language.svg)](https://plugins.jetbrains.com/plugin/27464-vala-language)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/27464-vala-language.svg)](https://plugins.jetbrains.com/plugin/27464-vala-language)
 
-This plugin provides syntax highlighting, code completion, integrated documentation, and more. This currently is in an
-early stage of development. Most luxuries of JetBrain IDEs are not implemented yet or are limited.
+Adds Vala language support for JetBrains IDEs, including:
 
-A Language Server Protocol (LSP) is used to provide many features, including documentation, code completion, syntax
-checking, etc. The supported LSP is required to be installed separately for now. More details for the LSP are
-available [here](./docs/LanguageServer.md).
+- Syntax highlighting
+- Diagnostics
+- Go to definition
+- Hover documentation
+- Code completion
+- Code formatting
+- New project wizard for Meson and non-Meson projects
+- Code style configurability
+- Vala-Lint support
 
-> [!NOTE]
-> The IDE most compatible currently is CLion because Meson is supported.
->
-> If you wish to use another IDE, note you must run meson builds via the command line every now and then if your project
-> uses meson.
+## Requirements
+
+Many features require the [vala-language-server](https://github.com/vala-lang/vala-language-server), which must be installed separately. See the [Language Server](./docs/LanguageServer.md) documentation for more details.
+
+CLion is the only IDE with native Meson project support, so if you use another IDE, you must run Meson build commands manually.
 
 ## Installation
 
@@ -48,3 +53,13 @@ available [here](./docs/LanguageServer.md).
 <img src="images/image_four.png" width="600" alt="image four"/>
 <img src="images/image_five.png" width="600" alt="image five"/>
 <img src="images/image_six.png" width="600" alt="image six"/>
+
+## Development
+
+Thanks for your interest in the project! To get started, check out the [Development](./docs/Development.md)
+and [Contributing](./CONTRIBUTING.md) guides. You can find information on how to build the project, parser, lexer,
+release a new version, and more.
+
+## Contact
+
+If you have any questions, feel free to open an issue here or reach out on the [Vala Discord](https://discord.gg/CXbPv2MT98) server.

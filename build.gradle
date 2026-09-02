@@ -7,11 +7,11 @@ plugins {
     // versions specified in gradle/libs.versions.toml
     alias(libs.plugins.intelliJPlatform)
     alias(libs.plugins.changelog)
+    alias(libs.plugins.grammarkit)
 }
 
 repositories {
     mavenCentral()
-    mavenLocal()
     intellijPlatform {
         defaultRepositories()
     }
@@ -22,11 +22,17 @@ dependencies {
     testImplementation libs.opentest4j
 
     intellijPlatform {
-        create(providers.gradleProperty('platformType'), providers.gradleProperty('platformVersion'))
+        // content pulled from gradle.properties
 
-        bundledPlugins(providers.gradleProperty('platformBundledPlugins').map { it.split(',').toList() })
+        def type = providers.gradleProperty('platformType')
+        def version = providers.gradleProperty('platformVersion')
+        create(type, version)
 
-        plugins(providers.gradleProperty('platformPlugins').map { it.split(',').toList() })
+        def bundledPlatformPlugins = providers.gradleProperty('platformBundledPlugins').map { it.split(',').toList() }
+        bundledPlugins(bundledPlatformPlugins)
+
+        def platformPlugins = providers.gradleProperty('platformPlugins').map { it.split(',').toList() }
+        plugins(platformPlugins)
 
         testFramework(TestFrameworkType.Platform.INSTANCE)
     }
@@ -34,58 +40,71 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(25)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
+
+def projectRoot = 'dev/vala/jetbrains'
+def projectSourcesRoot = layout.projectDirectory.dir('src/main/java').dir(projectRoot)
+def generatedSourcesDir = layout.projectDirectory.dir('src/main/gen')
+def pluginVersion = providers.gradleProperty('pluginVersion').get()
+
+project.version = pluginVersion
 
 // Parser/Lexer files generate to this src dir
 sourceSets {
     main {
         java {
-            srcDirs 'src/main/gen'
+            srcDirs generatedSourcesDir
         }
     }
 }
 
-group = providers.gradleProperty("pluginGroup").get()
-version = providers.gradleProperty("pluginVersion").get()
-
-def projectChangelog = project.changelog
-def pluginDescription = ExtensionsKt.markdownToHTML(file('MarketplaceDescription.md').text, '\n')
-
-// Configure IntelliJ Platform Gradle Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html
+// https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html#intellijPlatform
 intellijPlatform {
+
+    // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html#intellijPlatform-pluginConfiguration
     pluginConfiguration {
-        name = providers.gradleProperty('pluginName')
-        version = providers.gradleProperty('pluginVersion')
-        description = pluginDescription
+        id = providers.gradleProperty('pluginId').get()
+        name = providers.gradleProperty('pluginName').get()
+        description = ExtensionsKt.markdownToHTML(file('MarketplaceDescription.md').text, '\n')
 
-        changeNotes = providers.gradleProperty('pluginVersion').map { pluginVersion ->
-            projectChangelog.renderItem(
-                (projectChangelog.getOrNull(pluginVersion) ?: projectChangelog.getUnreleased())
-                    .withHeader(false)
-                    .withEmptySections(false),
-                Changelog.OutputType.HTML
-            )
-        }
+        project.changelog.version = pluginVersion
 
+        changeNotes = project.changelog.renderItem(
+            (project.changelog.getOrNull(pluginVersion) ?: project.changelog.getUnreleased())
+                .withHeader(false)
+                .withEmptySections(false),
+            Changelog.OutputType.HTML)
+
+        // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html#intellijPlatform-pluginConfiguration-ideaVersion
         ideaVersion {
             sinceBuild = providers.gradleProperty('pluginSinceBuild')
             untilBuild = providers.gradleProperty('pluginUntilBuild')
         }
+
+        // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html#intellijPlatform-pluginConfiguration-vendor
+        vendor {
+            name = providers.gradleProperty('vendorName').get()
+            email = providers.gradleProperty('vendorEmail').get()
+            url = providers.gradleProperty('vendorUrl').get()
+        }
     }
 
+    // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html#intellijPlatform-signing
     signing {
         certificateChain = providers.environmentVariable('CERTIFICATE_CHAIN')
         privateKey = providers.environmentVariable('PRIVATE_KEY')
         password = providers.environmentVariable('PRIVATE_KEY_PASSWORD')
     }
 
+    // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html#intellijPlatform-publishing
     publishing {
         token = providers.environmentVariable('PUBLISH_TOKEN')
         channels = ['default']
     }
 
+    // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html#intellijPlatform-pluginVerification
     pluginVerification {
         ides {
             recommended()
@@ -97,8 +116,6 @@ intellijPlatform {
 changelog {
     groups.empty()
     repositoryUrl = providers.gradleProperty('pluginRepositoryUrl')
-    // required due to release version 1.2.5.1-ALPHA (SemVer doesn't support this config by default)
-    headerParserRegex = ~/(\d+(?:\.\d+)+(?:-[a-zA-Z0-9]+)?)/
 }
 
 tasks {
@@ -106,8 +123,27 @@ tasks {
         gradleVersion = providers.gradleProperty('gradleVersion').get()
     }
 
+    // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-tasks.html#publishPlugin
     publishPlugin {
         dependsOn(patchChangelog)
+    }
+
+    // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-tasks.html#generateLexer
+    generateLexer {
+        sourceFile = projectSourcesRoot.file('syntax/Vala.flex')
+        targetRootOutputDir = generatedSourcesDir
+        packageName = "${projectRoot.replace('/', '.')}.lexer"
+        pathToClass = "${projectRoot}/lexer/ValaLexer.java"
+        purgeOldFiles = true
+    }
+
+    // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-tasks.html#generateParser
+    generateParser {
+        sourceFile = projectSourcesRoot.file('syntax/Vala.bnf')
+        targetRootOutputDir = generatedSourcesDir
+        pathToParser = "${projectRoot}/parser/ValaParser.java"
+        pathToPsiRoot = "${projectRoot}/parser/psi"
+        purgeOldFiles = true
     }
 }
 
