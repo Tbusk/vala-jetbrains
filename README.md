@@ -48,3 +48,13 @@ available [here](./docs/LanguageServer.md).
 <img src="images/image_four.png" width="600" alt="image four"/>
 <img src="images/image_five.png" width="600" alt="image five"/>
 <img src="images/image_six.png" width="600" alt="image six"/>
+
+## Development
+
+Thanks for your interest in the project! To get started, check out the [Development](./docs/Development.md)
+and [Contributing](./CONTRIBUTING.md) guides. You can find information on how to build the project, parser, lexer,
+release a new version, and more.
+
+## Contact
+
+If you have any questions, feel free to open an issue here or reach out on the [Vala Discord](https://discord.gg/CXbPv2MT98) server.
