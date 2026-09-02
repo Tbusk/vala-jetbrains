@@ -4,6 +4,29 @@
 
 ## [Unreleased]
 
+### Added
+
+- Added GrammarKit Gradle plugin
+- Added support for developing with non-JetBrains IDEs
+- Added developer documentation and guides
+
+### Changed
+
+- Updated Gradle from `9.4.1` to `9.6.1`
+- Updated LSP4IJ from `0.19.2` to `0.21.0`
+- Updated IntelliJ Platform Gradle plugin from `2.13.1` to `2.18.1`
+- Updated parser/lexer source locations to give clear separation
+- Revised the README and Marketplace description to be more concise and simple
+- Updated contribution guideline instructions and eased requirements
+- Updated CI/CD workflows and versioning
+- Moved plugin ID, name, and vendor from `plugin.xml` into `gradle.properties`
+
+### Removed
+
+- Removed JFlex jar and skeleton files in favor of GrammarKit
+- Removed outdated and irrelevant documentation
+- Removed the add-to-project CI/CD workflow
+
 ### Fixed
 
 - Fixed issue involving legacy configurable id calculation that sometimes pops up in an error message
