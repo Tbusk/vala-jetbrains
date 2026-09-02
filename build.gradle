@@ -53,8 +53,10 @@ version = providers.gradleProperty("pluginVersion").get()
 def projectChangelog = project.changelog
 def pluginDescription = ExtensionsKt.markdownToHTML(file('MarketplaceDescription.md').text, '\n')
 
-// Configure IntelliJ Platform Gradle Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html
+// https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html#intellijPlatform
 intellijPlatform {
+
+    // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html#intellijPlatform-pluginConfiguration
     pluginConfiguration {
         name = providers.gradleProperty('pluginName')
         version = providers.gradleProperty('pluginVersion')
@@ -69,6 +71,7 @@ intellijPlatform {
             )
         }
 
+        // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html#intellijPlatform-pluginConfiguration-ideaVersion
         ideaVersion {
             sinceBuild = providers.gradleProperty('pluginSinceBuild')
             untilBuild = providers.gradleProperty('pluginUntilBuild')
@@ -82,17 +85,20 @@ intellijPlatform {
         }
     }
 
+    // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html#intellijPlatform-signing
     signing {
         certificateChain = providers.environmentVariable('CERTIFICATE_CHAIN')
         privateKey = providers.environmentVariable('PRIVATE_KEY')
         password = providers.environmentVariable('PRIVATE_KEY_PASSWORD')
     }
 
+    // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html#intellijPlatform-publishing
     publishing {
         token = providers.environmentVariable('PUBLISH_TOKEN')
         channels = ['default']
     }
 
+    // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html#intellijPlatform-pluginVerification
     pluginVerification {
         ides {
             recommended()
@@ -104,8 +110,6 @@ intellijPlatform {
 changelog {
     groups.empty()
     repositoryUrl = providers.gradleProperty('pluginRepositoryUrl')
-    // required due to release version 1.2.5.1-ALPHA (SemVer doesn't support this config by default)
-    headerParserRegex = ~/(\d+(?:\.\d+)+(?:-[a-zA-Z0-9]+)?)/
 }
 
 tasks {
