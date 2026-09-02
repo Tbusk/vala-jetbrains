@@ -73,6 +73,13 @@ intellijPlatform {
             sinceBuild = providers.gradleProperty('pluginSinceBuild')
             untilBuild = providers.gradleProperty('pluginUntilBuild')
         }
+
+        // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html#intellijPlatform-pluginConfiguration-vendor
+        vendor {
+            name = providers.gradleProperty('vendorName').get()
+            email = providers.gradleProperty('vendorEmail').get()
+            url = providers.gradleProperty('vendorUrl').get()
+        }
     }
 
     signing {
