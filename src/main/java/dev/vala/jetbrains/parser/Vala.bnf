@@ -1,0 +1,40 @@
+{
+    parserClass="dev.vala.jetbrains.parser.ValaParser"
+
+    extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+    psiClassPrefix="Vala"
+    psiImplClassSuffix="Impl"
+    psiPackage="dev.vala.jetbrains.parser.psi"
+    psiImplPackage="dev.vala.jetbrains.parser.impl"
+
+    elementTypeHolderClass="dev.vala.jetbrains.parser.ValaTypes"
+    elementTypeClass="dev.vala.jetbrains.grammar.ValaElementType"
+    tokenTypeClass="dev.vala.jetbrains.grammar.ValaTokenType"
+
+   tokens=[
+        LBRACE='{'
+        RBRACE='}'
+        COMMA=','
+        SEMICOLON=';'
+        WHITESPACE='regexp:\s+'
+        IDENTIFIER='regexp:[a-zA-Z0-9]+'
+   ]
+}
+
+file ::= item*
+
+private item ::= !<<eof>> (enum_declaration) {
+    pin=1
+    recoverWhile=item_recover
+}
+
+private item_recover ::= !('enum')
+
+enum_declaration ::= enum IDENTIFIER LBRACE enum_values RBRACE {
+    pin=1
+}
+
+enum_values ::= enum_value (COMMA enum_value)* SEMICOLON
+
+enum_value ::= IDENTIFIER
