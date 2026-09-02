@@ -26,20 +26,4 @@ public interface ValaStructDeclaration extends ValaNamedElement {
   @Nullable
   ValaTypeDeclarationModifiers getTypeDeclarationModifiers();
 
-  //WARNING: getName(...) is skipped
-  //matching getName(ValaStructDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: setName(...) is skipped
-  //matching setName(ValaStructDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(ValaStructDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getPresentation(...) is skipped
-  //matching getPresentation(ValaStructDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
 }

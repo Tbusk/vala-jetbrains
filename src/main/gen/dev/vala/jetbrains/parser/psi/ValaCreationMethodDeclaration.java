@@ -32,20 +32,4 @@ public interface ValaCreationMethodDeclaration extends ValaNamedElement {
   @Nullable
   ValaThrowsStatement getThrowsStatement();
 
-  //WARNING: getName(...) is skipped
-  //matching getName(ValaCreationMethodDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: setName(...) is skipped
-  //matching setName(ValaCreationMethodDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(ValaCreationMethodDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getPresentation(...) is skipped
-  //matching getPresentation(ValaCreationMethodDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
 }

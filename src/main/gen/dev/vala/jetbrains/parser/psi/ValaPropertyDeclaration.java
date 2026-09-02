@@ -26,20 +26,4 @@ public interface ValaPropertyDeclaration extends ValaNamedElement {
   @Nullable
   ValaTypeWeakWithParenthesis getTypeWeakWithParenthesis();
 
-  //WARNING: getName(...) is skipped
-  //matching getName(ValaPropertyDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: setName(...) is skipped
-  //matching setName(ValaPropertyDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(ValaPropertyDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getPresentation(...) is skipped
-  //matching getPresentation(ValaPropertyDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
 }

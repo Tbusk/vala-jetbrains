@@ -20,20 +20,4 @@ public interface ValaYieldExpression extends ValaNamedElement {
   @NotNull
   List<ValaMethodCall> getMethodCallList();
 
-  //WARNING: getName(...) is skipped
-  //matching getName(ValaYieldExpression, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: setName(...) is skipped
-  //matching setName(ValaYieldExpression, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(ValaYieldExpression, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getPresentation(...) is skipped
-  //matching getPresentation(ValaYieldExpression, ...)
-  //methods are not found in ValaPsiImplUtil
-
 }

@@ -5,7 +5,7 @@ import com.intellij.psi.PsiElement;
 import dev.vala.jetbrains.highlighting.ValaHighlighter;
 import dev.vala.jetbrains.highlighting.ValaHighlighterUtil;
 import dev.vala.jetbrains.highlighting.ValaTextAttributeKey;
-import dev.vala.jetbrains.psi.impl.ValaAttributeImpl;
+import dev.vala.jetbrains.parser.psi.impl.ValaAttributeImpl;
 import org.jetbrains.annotations.NotNull;
 
 public final class ValaAttributeHighlighter implements ValaHighlighter {

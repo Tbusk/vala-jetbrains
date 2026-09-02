@@ -23,20 +23,4 @@ public interface ValaInterfaceDeclaration extends ValaNamedElement {
   @Nullable
   ValaTypeParameters getTypeParameters();
 
-  //WARNING: getName(...) is skipped
-  //matching getName(ValaInterfaceDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: setName(...) is skipped
-  //matching setName(ValaInterfaceDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(ValaInterfaceDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getPresentation(...) is skipped
-  //matching getPresentation(ValaInterfaceDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
 }

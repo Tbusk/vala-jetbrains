@@ -17,20 +17,4 @@ public interface ValaNamespaceDeclaration extends ValaNamedElement {
   @NotNull
   List<ValaUsingDirective> getUsingDirectiveList();
 
-  //WARNING: getName(...) is skipped
-  //matching getName(ValaNamespaceDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: setName(...) is skipped
-  //matching setName(ValaNamespaceDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(ValaNamespaceDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getPresentation(...) is skipped
-  //matching getPresentation(ValaNamespaceDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
 }

@@ -14,20 +14,4 @@ public interface ValaIdentifier extends ValaNamedElement {
   @Nullable
   PsiElement getIdentifierToken();
 
-  //WARNING: getName(...) is skipped
-  //matching getName(ValaIdentifier, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: setName(...) is skipped
-  //matching setName(ValaIdentifier, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(ValaIdentifier, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getPresentation(...) is skipped
-  //matching getPresentation(ValaIdentifier, ...)
-  //methods are not found in ValaPsiImplUtil
-
 }

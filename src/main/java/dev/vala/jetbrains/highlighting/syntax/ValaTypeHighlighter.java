@@ -5,8 +5,8 @@ import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.psi.PsiElement;
 import dev.vala.jetbrains.highlighting.ValaHighlighter;
 import dev.vala.jetbrains.highlighting.ValaHighlighterUtil;
-import dev.vala.jetbrains.psi.impl.ValaTypeImpl;
-import dev.vala.jetbrains.psi.impl.ValaTypeWeakImpl;
+import dev.vala.jetbrains.parser.psi.impl.ValaTypeImpl;
+import dev.vala.jetbrains.parser.psi.impl.ValaTypeWeakImpl;
 import org.jetbrains.annotations.NotNull;
 
 public final class ValaTypeHighlighter implements ValaHighlighter {

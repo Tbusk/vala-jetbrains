@@ -32,20 +32,4 @@ public interface ValaParameter extends ValaNamedElement {
   @Nullable
   ValaTypeWithParenthesis getTypeWithParenthesis();
 
-  //WARNING: getName(...) is skipped
-  //matching getName(ValaParameter, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: setName(...) is skipped
-  //matching setName(ValaParameter, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(ValaParameter, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getPresentation(...) is skipped
-  //matching getPresentation(ValaParameter, ...)
-  //methods are not found in ValaPsiImplUtil
-
 }

@@ -8,10 +8,10 @@ import dev.vala.jetbrains.highlighting.ValaElementScope;
 import dev.vala.jetbrains.highlighting.ValaHighlighter;
 import dev.vala.jetbrains.highlighting.ValaSyntaxHighlightingAnnotator;
 import dev.vala.jetbrains.highlighting.ValaTextAttributeKey;
-import dev.vala.jetbrains.psi.ValaCatchClause;
-import dev.vala.jetbrains.psi.ValaForeachStatement;
-import dev.vala.jetbrains.psi.ValaIdentifier;
-import dev.vala.jetbrains.psi.ValaParameter;
+import dev.vala.jetbrains.parser.psi.ValaCatchClause;
+import dev.vala.jetbrains.parser.psi.ValaForeachStatement;
+import dev.vala.jetbrains.parser.psi.ValaIdentifier;
+import dev.vala.jetbrains.parser.psi.ValaParameter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.AbstractMap;

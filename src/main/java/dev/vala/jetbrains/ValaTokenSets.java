@@ -2,14 +2,15 @@ package dev.vala.jetbrains;
 
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-import dev.vala.jetbrains.psi.ValaTypes;
+import dev.vala.jetbrains.parser.psi.ValaTypes;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static dev.vala.jetbrains.psi.ValaTypes.STRING_LITERAL;
+import static dev.vala.jetbrains.parser.psi.ValaTypes.STRING_LITERAL;
+
 
 public interface ValaTokenSets {
 

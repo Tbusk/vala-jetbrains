@@ -17,20 +17,4 @@ public interface ValaFieldDeclarationSection extends ValaNamedElement {
   @NotNull
   List<ValaInlineArrayType> getInlineArrayTypeList();
 
-  //WARNING: getName(...) is skipped
-  //matching getName(ValaFieldDeclarationSection, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: setName(...) is skipped
-  //matching setName(ValaFieldDeclarationSection, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(ValaFieldDeclarationSection, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getPresentation(...) is skipped
-  //matching getPresentation(ValaFieldDeclarationSection, ...)
-  //methods are not found in ValaPsiImplUtil
-
 }

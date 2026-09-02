@@ -20,20 +20,4 @@ public interface ValaEnumDeclaration extends ValaNamedElement {
   @NotNull
   ValaSymbol getSymbol();
 
-  //WARNING: getName(...) is skipped
-  //matching getName(ValaEnumDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: setName(...) is skipped
-  //matching setName(ValaEnumDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(ValaEnumDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getPresentation(...) is skipped
-  //matching getPresentation(ValaEnumDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
 }

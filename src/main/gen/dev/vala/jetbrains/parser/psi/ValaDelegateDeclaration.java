@@ -26,20 +26,4 @@ public interface ValaDelegateDeclaration extends ValaNamedElement {
   @Nullable
   ValaTypeWithParenthesis getTypeWithParenthesis();
 
-  //WARNING: getName(...) is skipped
-  //matching getName(ValaDelegateDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: setName(...) is skipped
-  //matching setName(ValaDelegateDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(ValaDelegateDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getPresentation(...) is skipped
-  //matching getPresentation(ValaDelegateDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
 }

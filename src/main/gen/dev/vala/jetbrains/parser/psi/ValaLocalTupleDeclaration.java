@@ -14,20 +14,4 @@ public interface ValaLocalTupleDeclaration extends ValaNamedElement {
   @NotNull
   ValaMember getMember();
 
-  //WARNING: getName(...) is skipped
-  //matching getName(ValaLocalTupleDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: setName(...) is skipped
-  //matching setName(ValaLocalTupleDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(ValaLocalTupleDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getPresentation(...) is skipped
-  //matching getPresentation(ValaLocalTupleDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
 }

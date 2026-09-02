@@ -4,6 +4,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFileFactory;
 import dev.vala.jetbrains.language.ValaFile;
 import dev.vala.jetbrains.language.ValaFileType;
+import dev.vala.jetbrains.parser.psi.ValaIdentifier;
 
 public class ValaElementFactory {
 

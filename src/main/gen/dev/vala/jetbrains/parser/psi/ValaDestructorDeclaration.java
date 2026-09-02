@@ -17,20 +17,4 @@ public interface ValaDestructorDeclaration extends ValaNamedElement {
   @NotNull
   ValaIdentifier getIdentifier();
 
-  //WARNING: getName(...) is skipped
-  //matching getName(ValaDestructorDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: setName(...) is skipped
-  //matching setName(ValaDestructorDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(ValaDestructorDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getPresentation(...) is skipped
-  //matching getPresentation(ValaDestructorDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
 }

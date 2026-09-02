@@ -20,20 +20,4 @@ public interface ValaErrordomainDeclaration extends ValaNamedElement {
   @NotNull
   ValaSymbol getSymbol();
 
-  //WARNING: getName(...) is skipped
-  //matching getName(ValaErrordomainDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: setName(...) is skipped
-  //matching setName(ValaErrordomainDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(ValaErrordomainDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getPresentation(...) is skipped
-  //matching getPresentation(ValaErrordomainDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
 }

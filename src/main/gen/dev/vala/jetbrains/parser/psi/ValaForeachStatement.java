@@ -23,20 +23,4 @@ public interface ValaForeachStatement extends ValaNamedElement {
   @Nullable
   ValaTypeWeakWithParenthesis getTypeWeakWithParenthesis();
 
-  //WARNING: getName(...) is skipped
-  //matching getName(ValaForeachStatement, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: setName(...) is skipped
-  //matching setName(ValaForeachStatement, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(ValaForeachStatement, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getPresentation(...) is skipped
-  //matching getPresentation(ValaForeachStatement, ...)
-  //methods are not found in ValaPsiImplUtil
-
 }

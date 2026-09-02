@@ -6,7 +6,7 @@ import dev.vala.jetbrains.highlighting.ValaHighlighter;
 import dev.vala.jetbrains.highlighting.ValaHighlighterUtil;
 import dev.vala.jetbrains.highlighting.ValaSyntaxHighlightingAnnotator;
 import dev.vala.jetbrains.highlighting.ValaTextAttributeKey;
-import dev.vala.jetbrains.psi.impl.ValaConstantDeclarationImpl;
+import dev.vala.jetbrains.parser.psi.impl.ValaConstantDeclarationImpl;
 import org.jetbrains.annotations.NotNull;
 
 public final class ValaConstantDeclarationHighlighter implements ValaHighlighter {

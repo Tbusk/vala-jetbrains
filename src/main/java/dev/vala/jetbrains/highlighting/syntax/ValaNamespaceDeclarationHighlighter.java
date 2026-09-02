@@ -6,7 +6,7 @@ import dev.vala.jetbrains.highlighting.ValaHighlighter;
 import dev.vala.jetbrains.highlighting.ValaHighlighterUtil;
 import dev.vala.jetbrains.highlighting.ValaSyntaxHighlightingAnnotator;
 import dev.vala.jetbrains.highlighting.ValaTextAttributeKey;
-import dev.vala.jetbrains.psi.impl.ValaNamespaceDeclarationImpl;
+import dev.vala.jetbrains.parser.psi.impl.ValaNamespaceDeclarationImpl;
 import org.jetbrains.annotations.NotNull;
 
 public final class ValaNamespaceDeclarationHighlighter implements ValaHighlighter {

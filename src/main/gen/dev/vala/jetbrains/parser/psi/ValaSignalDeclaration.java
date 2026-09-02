@@ -29,20 +29,4 @@ public interface ValaSignalDeclaration extends ValaNamedElement {
   @Nullable
   ValaTypeWithParenthesis getTypeWithParenthesis();
 
-  //WARNING: getName(...) is skipped
-  //matching getName(ValaSignalDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: setName(...) is skipped
-  //matching setName(ValaSignalDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(ValaSignalDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getPresentation(...) is skipped
-  //matching getPresentation(ValaSignalDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
 }

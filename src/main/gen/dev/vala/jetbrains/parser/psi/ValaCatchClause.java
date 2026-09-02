@@ -20,20 +20,4 @@ public interface ValaCatchClause extends ValaNamedElement {
   @Nullable
   ValaTypeWeakWithParenthesis getTypeWeakWithParenthesis();
 
-  //WARNING: getName(...) is skipped
-  //matching getName(ValaCatchClause, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: setName(...) is skipped
-  //matching setName(ValaCatchClause, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(ValaCatchClause, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getPresentation(...) is skipped
-  //matching getPresentation(ValaCatchClause, ...)
-  //methods are not found in ValaPsiImplUtil
-
 }

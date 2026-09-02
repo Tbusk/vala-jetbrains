@@ -26,20 +26,4 @@ public interface ValaConstantDeclaration extends ValaNamedElement {
   @NotNull
   ValaType getType();
 
-  //WARNING: getName(...) is skipped
-  //matching getName(ValaConstantDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: setName(...) is skipped
-  //matching setName(ValaConstantDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(ValaConstantDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getPresentation(...) is skipped
-  //matching getPresentation(ValaConstantDeclaration, ...)
-  //methods are not found in ValaPsiImplUtil
-
 }

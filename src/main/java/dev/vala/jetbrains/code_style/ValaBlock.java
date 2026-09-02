@@ -5,7 +5,8 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.formatter.common.AbstractBlock;
 import com.intellij.psi.tree.IElementType;
-import dev.vala.jetbrains.psi.ValaTypes;
+
+import dev.vala.jetbrains.parser.psi.ValaTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

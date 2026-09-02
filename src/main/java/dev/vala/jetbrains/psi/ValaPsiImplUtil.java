@@ -6,6 +6,8 @@ import com.intellij.openapi.util.NlsSafe;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.TokenSet;
+import dev.vala.jetbrains.parser.psi.ValaIdentifier;
+import dev.vala.jetbrains.parser.psi.ValaTypes;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;

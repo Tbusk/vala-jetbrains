@@ -4,7 +4,8 @@ import com.intellij.formatting.*;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import dev.vala.jetbrains.language.ValaLanguage;
-import dev.vala.jetbrains.psi.ValaTypes;
+
+import dev.vala.jetbrains.parser.psi.ValaTypes;
 import org.jetbrains.annotations.NotNull;
 
 public class ValaFormattingModelBuilder implements FormattingModelBuilder {

@@ -11,20 +11,4 @@ public interface ValaLambdaExpressionParam extends ValaNamedElement {
   @NotNull
   ValaIdentifier getIdentifier();
 
-  //WARNING: getName(...) is skipped
-  //matching getName(ValaLambdaExpressionParam, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: setName(...) is skipped
-  //matching setName(ValaLambdaExpressionParam, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(ValaLambdaExpressionParam, ...)
-  //methods are not found in ValaPsiImplUtil
-
-  //WARNING: getPresentation(...) is skipped
-  //matching getPresentation(ValaLambdaExpressionParam, ...)
-  //methods are not found in ValaPsiImplUtil
-
 }
