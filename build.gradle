@@ -22,11 +22,17 @@ dependencies {
     testImplementation libs.opentest4j
 
     intellijPlatform {
-        create(providers.gradleProperty('platformType'), providers.gradleProperty('platformVersion'))
+        // content pulled from gradle.properties
 
-        bundledPlugins(providers.gradleProperty('platformBundledPlugins').map { it.split(',').toList() })
+        def type = providers.gradleProperty('platformType')
+        def version = providers.gradleProperty('platformVersion')
+        create(type, version)
 
-        plugins(providers.gradleProperty('platformPlugins').map { it.split(',').toList() })
+        def bundledPlatformPlugins = providers.gradleProperty('platformBundledPlugins').map { it.split(',').toList() }
+        bundledPlugins(bundledPlatformPlugins)
+
+        def platformPlugins = providers.gradleProperty('platformPlugins').map { it.split(',').toList() }
+        plugins(platformPlugins)
 
         testFramework(TestFrameworkType.Platform.INSTANCE)
     }
