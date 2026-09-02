@@ -48,21 +48,21 @@ To update the version used:
 2. Update the version in [gradle.properties](../gradle.properties) under the `gradleVersion` property.
 3. Find the sha256 checksum under [Gradle Checksums](https://gradle.org/release-checksums/) under the `Binary-only`
    section
-4. Run the following command to update the Gradle wrapper:
+4. Run the following command twice to update the Gradle wrapper. The first time will download the wrapper, the second time will update it:
 
-   **Linux/MacOS:**
+**Linux/MacOS:**
 
-    ```shell
-    ./gradlew :wrapper --gradle-distribution-sha256-sum=<checksum>
-    ```
+```shell
+./gradlew :wrapper --gradle-distribution-sha256-sum=<checksum>
+```
 
-   **Windows:**
+**Windows:**
 
-    ```shell
-    gradlew.bat :wrapper --gradle-distribution-sha256-sum=<checksum>
-    ```
+```shell
+gradlew.bat :wrapper --gradle-distribution-sha256-sum=<checksum>
+```
 
-   Replace `<checksum>` with the checksum you found in step 3.
+Replace `<checksum>` with the checksum you found in step 3.
 
 ## Grammar
 

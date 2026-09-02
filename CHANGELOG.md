@@ -12,7 +12,7 @@
 
 ### Changed
 
-- Updated Gradle from `9.4.1` to `9.6.1`
+- Updated Gradle from `9.4.1` to `9.7.1`
 - Updated LSP4IJ from `0.19.2` to `0.21.0`
 - Updated IntelliJ Platform Gradle plugin from `2.13.1` to `2.18.1`
 - Updated parser/lexer source locations to give clear separation
