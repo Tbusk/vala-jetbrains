@@ -6,7 +6,6 @@ import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.TokenSet;
 import dev.vala.jetbrains.highlighting.ValaHighlighter;
-import dev.vala.jetbrains.highlighting.ValaSyntaxHighlightingAnnotator;
 import dev.vala.jetbrains.highlighting.ValaTextAttributeKey;
 import dev.vala.jetbrains.psi.ValaTypes;
 import dev.vala.jetbrains.psi.impl.ValaFieldDeclarationImpl;
@@ -33,9 +32,6 @@ public final class ValaFieldDeclarationHighlighter implements ValaHighlighter {
             ASTNode[] fieldDeclarationSectionNodes = psiElement.getNode().getChildren(TokenSet.create(ValaTypes.FIELD_DECLARATION_SECTION));
 
             for (ASTNode fieldDeclarationSectionNode : fieldDeclarationSectionNodes) {
-
-                ValaSyntaxHighlightingAnnotator.addScopedElement(fieldDeclarationSectionNode.getPsi());
-
                 ASTNode identifierNode = fieldDeclarationSectionNode.findChildByType(ValaTypes.IDENTIFIER);
 
                 if (identifierNode != null) {

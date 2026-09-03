@@ -6,7 +6,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.TokenSet;
 import dev.vala.jetbrains.highlighting.ValaHighlighter;
 import dev.vala.jetbrains.highlighting.ValaHighlighterUtil;
-import dev.vala.jetbrains.highlighting.ValaSyntaxHighlightingAnnotator;
 import dev.vala.jetbrains.highlighting.ValaTextAttributeKey;
 import dev.vala.jetbrains.psi.ValaTypes;
 import dev.vala.jetbrains.psi.impl.ValaLambdaExpressionImpl;
@@ -39,8 +38,6 @@ public final class ValaLambdaExpressionHighlighting implements ValaHighlighter {
                 for (ASTNode lambdaExpressionParamNode : lamdaExpressionParamNodes) {
                     ASTNode identifierNode = lambdaExpressionParamNode.findChildByType(ValaTypes.IDENTIFIER);
 
-                    ValaSyntaxHighlightingAnnotator.addScopedElement(lambdaExpressionParamNode.getPsi());
-
                     if (identifierNode != null) {
                         util.highlightIdentifier(identifierNode.getPsi(), annotationHolder, ValaTextAttributeKey.LOCAL_VARIABLE);
                     }
@@ -51,8 +48,6 @@ public final class ValaLambdaExpressionHighlighting implements ValaHighlighter {
 
             if (lambdaExpressionParamNode != null) {
                 ASTNode identifierNode = lambdaExpressionParamNode.findChildByType(ValaTypes.IDENTIFIER);
-
-                ValaSyntaxHighlightingAnnotator.addScopedElement(lambdaExpressionParamNode.getPsi());
 
                 if (identifierNode != null) {
                     util.highlightIdentifier(identifierNode.getPsi(), annotationHolder, ValaTextAttributeKey.LOCAL_VARIABLE);
