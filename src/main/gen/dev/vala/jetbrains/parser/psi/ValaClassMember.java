@@ -14,7 +14,7 @@ public interface ValaClassMember extends PsiElement {
   ValaClassDeclaration getClassDeclaration();
 
   @Nullable
-  ValaConstantDeclaration getConstantDeclaration();
+  ValaConstantDeclarations getConstantDeclarations();
 
   @Nullable
   ValaConstructorDeclaration getConstructorDeclaration();

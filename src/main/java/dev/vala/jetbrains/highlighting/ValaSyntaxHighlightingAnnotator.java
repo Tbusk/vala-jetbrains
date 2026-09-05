@@ -34,6 +34,16 @@ import dev.vala.jetbrains.highlighting.syntax.ValaTypeHighlighter;
 import dev.vala.jetbrains.highlighting.syntax.ValaTypeParameterHighlighter;
 import dev.vala.jetbrains.highlighting.syntax.ValaUsingHighlighter;
 import dev.vala.jetbrains.highlighting.syntax.ValaYieldExpressionHighlighter;
+import dev.vala.jetbrains.parser.psi.ValaCatchClause;
+import dev.vala.jetbrains.parser.psi.ValaConstantDeclaration;
+import dev.vala.jetbrains.parser.psi.ValaFieldDeclarationSection;
+import dev.vala.jetbrains.parser.psi.ValaForeachStatement;
+import dev.vala.jetbrains.parser.psi.ValaLambdaExpressionParam;
+import dev.vala.jetbrains.parser.psi.ValaLocalVariable;
+import dev.vala.jetbrains.parser.psi.ValaParameter;
+import dev.vala.jetbrains.parser.psi.ValaSimpleName;
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -88,6 +98,47 @@ public final class ValaSyntaxHighlightingAnnotator implements Annotator {
     public void annotate(@NotNull PsiElement psiElement, @NotNull AnnotationHolder annotationHolder) {
         for (ValaHighlighter highlighter : SYNTAX_HIGHLIGHTERS) {
             highlighter.highlight(psiElement, annotationHolder);
+        }
+
+        if (!(psiElement instanceof ValaSimpleName simpleName)) {
+            return;
+        }
+
+        PsiReference reference = simpleName.getReference();
+
+        if (reference == null) {
+            return;
+        }
+
+        PsiElement resolved = reference.resolve();
+
+        if (PsiTreeUtil.instanceOf(
+            resolved, 
+            ValaLocalVariable.class,
+            ValaCatchClause.class,
+            ValaForeachStatement.class
+        )) {
+            ValaHighlighterUtil.getInstance().highlightIdentifier(simpleName, annotationHolder, ValaTextAttributeKey.LOCAL_VARIABLE); 
+            return;
+        }
+
+        if (PsiTreeUtil.instanceOf(
+            resolved, 
+            ValaParameter.class,
+            ValaLambdaExpressionParam.class
+        )) {
+            ValaHighlighterUtil.getInstance().highlightIdentifier(simpleName, annotationHolder, ValaTextAttributeKey.PARAMETER);
+            return;
+        }
+
+        if (resolved instanceof ValaConstantDeclaration) {
+            ValaHighlighterUtil.getInstance().highlightIdentifier(simpleName, annotationHolder, ValaTextAttributeKey.CONSTANT);
+            return;
+        }
+
+        if (resolved instanceof ValaFieldDeclarationSection) {
+            ValaHighlighterUtil.getInstance().highlightIdentifier(simpleName, annotationHolder, ValaTextAttributeKey.INSTANCE_VARIABLE);
+            return;
         }
     }
 }

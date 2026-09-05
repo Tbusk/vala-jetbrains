@@ -950,7 +950,7 @@ public class ValaParser implements PsiParser, LightPsiParser {
   //                    property_declaration |
   //                    signal_declaration |
   //                    field_declaration |
-  //                    constant_declaration |
+  //                    constant_declarations |
   //                    constructor_declaration |
   //                    destructor_declaration)
   public static boolean class_member(PsiBuilder builder_, int level_) {
@@ -980,7 +980,7 @@ public class ValaParser implements PsiParser, LightPsiParser {
   //                    property_declaration |
   //                    signal_declaration |
   //                    field_declaration |
-  //                    constant_declaration |
+  //                    constant_declarations |
   //                    constructor_declaration |
   //                    destructor_declaration
   private static boolean class_member_1(PsiBuilder builder_, int level_) {
@@ -996,7 +996,7 @@ public class ValaParser implements PsiParser, LightPsiParser {
     if (!result_) result_ = property_declaration(builder_, level_ + 1);
     if (!result_) result_ = signal_declaration(builder_, level_ + 1);
     if (!result_) result_ = field_declaration(builder_, level_ + 1);
-    if (!result_) result_ = constant_declaration(builder_, level_ + 1);
+    if (!result_) result_ = constant_declarations(builder_, level_ + 1);
     if (!result_) result_ = constructor_declaration(builder_, level_ + 1);
     if (!result_) result_ = destructor_declaration(builder_, level_ + 1);
     return result_;
@@ -1169,133 +1169,121 @@ public class ValaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // [ access_modifier ] [ member_declaration_modifiers ] const (type [ inline_array_type ]) (identifier [ inline_array_type ])
-  //                          [ EQUALS expression ] [COMMA identifier [ inline_array_type ][ EQUALS expression ]] SEMICOLON
+  // identifier [ inline_array_type ][ EQUALS expression ]
   public static boolean constant_declaration(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "constant_declaration")) return false;
     boolean result_;
     Marker marker_ = enter_section_(builder_, level_, _NONE_, CONSTANT_DECLARATION, "<constant declaration>");
-    result_ = constant_declaration_0(builder_, level_ + 1);
+    result_ = identifier(builder_, level_ + 1);
     result_ = result_ && constant_declaration_1(builder_, level_ + 1);
+    result_ = result_ && constant_declaration_2(builder_, level_ + 1);
+    exit_section_(builder_, level_, marker_, result_, false, null);
+    return result_;
+  }
+
+  // [ inline_array_type ]
+  private static boolean constant_declaration_1(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "constant_declaration_1")) return false;
+    inline_array_type(builder_, level_ + 1);
+    return true;
+  }
+
+  // [ EQUALS expression ]
+  private static boolean constant_declaration_2(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "constant_declaration_2")) return false;
+    constant_declaration_2_0(builder_, level_ + 1);
+    return true;
+  }
+
+  // EQUALS expression
+  private static boolean constant_declaration_2_0(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "constant_declaration_2_0")) return false;
+    boolean result_;
+    Marker marker_ = enter_section_(builder_);
+    result_ = consumeToken(builder_, EQUALS);
+    result_ = result_ && expression(builder_, level_ + 1);
+    exit_section_(builder_, marker_, null, result_);
+    return result_;
+  }
+
+  /* ********************************************************** */
+  // [ access_modifier ] [ member_declaration_modifiers ] const (type [ inline_array_type ])
+  //                           (constant_declaration (COMMA constant_declaration)*) SEMICOLON
+  public static boolean constant_declarations(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "constant_declarations")) return false;
+    boolean result_;
+    Marker marker_ = enter_section_(builder_, level_, _NONE_, CONSTANT_DECLARATIONS, "<constant declarations>");
+    result_ = constant_declarations_0(builder_, level_ + 1);
+    result_ = result_ && constant_declarations_1(builder_, level_ + 1);
     result_ = result_ && consumeToken(builder_, CONST);
-    result_ = result_ && constant_declaration_3(builder_, level_ + 1);
-    result_ = result_ && constant_declaration_4(builder_, level_ + 1);
-    result_ = result_ && constant_declaration_5(builder_, level_ + 1);
-    result_ = result_ && constant_declaration_6(builder_, level_ + 1);
+    result_ = result_ && constant_declarations_3(builder_, level_ + 1);
+    result_ = result_ && constant_declarations_4(builder_, level_ + 1);
     result_ = result_ && consumeToken(builder_, SEMICOLON);
     exit_section_(builder_, level_, marker_, result_, false, null);
     return result_;
   }
 
   // [ access_modifier ]
-  private static boolean constant_declaration_0(PsiBuilder builder_, int level_) {
-    if (!recursion_guard_(builder_, level_, "constant_declaration_0")) return false;
+  private static boolean constant_declarations_0(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "constant_declarations_0")) return false;
     access_modifier(builder_, level_ + 1);
     return true;
   }
 
   // [ member_declaration_modifiers ]
-  private static boolean constant_declaration_1(PsiBuilder builder_, int level_) {
-    if (!recursion_guard_(builder_, level_, "constant_declaration_1")) return false;
+  private static boolean constant_declarations_1(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "constant_declarations_1")) return false;
     member_declaration_modifiers(builder_, level_ + 1);
     return true;
   }
 
   // type [ inline_array_type ]
-  private static boolean constant_declaration_3(PsiBuilder builder_, int level_) {
-    if (!recursion_guard_(builder_, level_, "constant_declaration_3")) return false;
+  private static boolean constant_declarations_3(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "constant_declarations_3")) return false;
     boolean result_;
     Marker marker_ = enter_section_(builder_);
     result_ = type(builder_, level_ + 1);
-    result_ = result_ && constant_declaration_3_1(builder_, level_ + 1);
+    result_ = result_ && constant_declarations_3_1(builder_, level_ + 1);
     exit_section_(builder_, marker_, null, result_);
     return result_;
   }
 
   // [ inline_array_type ]
-  private static boolean constant_declaration_3_1(PsiBuilder builder_, int level_) {
-    if (!recursion_guard_(builder_, level_, "constant_declaration_3_1")) return false;
+  private static boolean constant_declarations_3_1(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "constant_declarations_3_1")) return false;
     inline_array_type(builder_, level_ + 1);
     return true;
   }
 
-  // identifier [ inline_array_type ]
-  private static boolean constant_declaration_4(PsiBuilder builder_, int level_) {
-    if (!recursion_guard_(builder_, level_, "constant_declaration_4")) return false;
+  // constant_declaration (COMMA constant_declaration)*
+  private static boolean constant_declarations_4(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "constant_declarations_4")) return false;
     boolean result_;
     Marker marker_ = enter_section_(builder_);
-    result_ = identifier(builder_, level_ + 1);
-    result_ = result_ && constant_declaration_4_1(builder_, level_ + 1);
+    result_ = constant_declaration(builder_, level_ + 1);
+    result_ = result_ && constant_declarations_4_1(builder_, level_ + 1);
     exit_section_(builder_, marker_, null, result_);
     return result_;
   }
 
-  // [ inline_array_type ]
-  private static boolean constant_declaration_4_1(PsiBuilder builder_, int level_) {
-    if (!recursion_guard_(builder_, level_, "constant_declaration_4_1")) return false;
-    inline_array_type(builder_, level_ + 1);
+  // (COMMA constant_declaration)*
+  private static boolean constant_declarations_4_1(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "constant_declarations_4_1")) return false;
+    while (true) {
+      int pos_ = current_position_(builder_);
+      if (!constant_declarations_4_1_0(builder_, level_ + 1)) break;
+      if (!empty_element_parsed_guard_(builder_, "constant_declarations_4_1", pos_)) break;
+    }
     return true;
   }
 
-  // [ EQUALS expression ]
-  private static boolean constant_declaration_5(PsiBuilder builder_, int level_) {
-    if (!recursion_guard_(builder_, level_, "constant_declaration_5")) return false;
-    constant_declaration_5_0(builder_, level_ + 1);
-    return true;
-  }
-
-  // EQUALS expression
-  private static boolean constant_declaration_5_0(PsiBuilder builder_, int level_) {
-    if (!recursion_guard_(builder_, level_, "constant_declaration_5_0")) return false;
-    boolean result_;
-    Marker marker_ = enter_section_(builder_);
-    result_ = consumeToken(builder_, EQUALS);
-    result_ = result_ && expression(builder_, level_ + 1);
-    exit_section_(builder_, marker_, null, result_);
-    return result_;
-  }
-
-  // [COMMA identifier [ inline_array_type ][ EQUALS expression ]]
-  private static boolean constant_declaration_6(PsiBuilder builder_, int level_) {
-    if (!recursion_guard_(builder_, level_, "constant_declaration_6")) return false;
-    constant_declaration_6_0(builder_, level_ + 1);
-    return true;
-  }
-
-  // COMMA identifier [ inline_array_type ][ EQUALS expression ]
-  private static boolean constant_declaration_6_0(PsiBuilder builder_, int level_) {
-    if (!recursion_guard_(builder_, level_, "constant_declaration_6_0")) return false;
+  // COMMA constant_declaration
+  private static boolean constant_declarations_4_1_0(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "constant_declarations_4_1_0")) return false;
     boolean result_;
     Marker marker_ = enter_section_(builder_);
     result_ = consumeToken(builder_, COMMA);
-    result_ = result_ && identifier(builder_, level_ + 1);
-    result_ = result_ && constant_declaration_6_0_2(builder_, level_ + 1);
-    result_ = result_ && constant_declaration_6_0_3(builder_, level_ + 1);
-    exit_section_(builder_, marker_, null, result_);
-    return result_;
-  }
-
-  // [ inline_array_type ]
-  private static boolean constant_declaration_6_0_2(PsiBuilder builder_, int level_) {
-    if (!recursion_guard_(builder_, level_, "constant_declaration_6_0_2")) return false;
-    inline_array_type(builder_, level_ + 1);
-    return true;
-  }
-
-  // [ EQUALS expression ]
-  private static boolean constant_declaration_6_0_3(PsiBuilder builder_, int level_) {
-    if (!recursion_guard_(builder_, level_, "constant_declaration_6_0_3")) return false;
-    constant_declaration_6_0_3_0(builder_, level_ + 1);
-    return true;
-  }
-
-  // EQUALS expression
-  private static boolean constant_declaration_6_0_3_0(PsiBuilder builder_, int level_) {
-    if (!recursion_guard_(builder_, level_, "constant_declaration_6_0_3_0")) return false;
-    boolean result_;
-    Marker marker_ = enter_section_(builder_);
-    result_ = consumeToken(builder_, EQUALS);
-    result_ = result_ && expression(builder_, level_ + 1);
+    result_ = result_ && constant_declaration(builder_, level_ + 1);
     exit_section_(builder_, marker_, null, result_);
     return result_;
   }
@@ -1787,7 +1775,7 @@ public class ValaParser implements PsiParser, LightPsiParser {
   /* ********************************************************** */
   // SEMICOLON | object_or_array_creation_expression | yield_statement | throw_statement | with_statement | if_statement | switch_statement | while_statement | for_statement |
   //                                      foreach_statement | break_statement | continue_statement | return_statement | method_declaration | local_variable_declarations |
-  //                                      try_statement | delete_statement | expression_statement | lock_statement | unlock_statement | constant_declaration
+  //                                      try_statement | delete_statement | expression_statement | lock_statement | unlock_statement | constant_declarations
   public static boolean embedded_statement_without_block(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "embedded_statement_without_block")) return false;
     boolean result_;
@@ -1812,7 +1800,7 @@ public class ValaParser implements PsiParser, LightPsiParser {
     if (!result_) result_ = expression_statement(builder_, level_ + 1);
     if (!result_) result_ = lock_statement(builder_, level_ + 1);
     if (!result_) result_ = unlock_statement(builder_, level_ + 1);
-    if (!result_) result_ = constant_declaration(builder_, level_ + 1);
+    if (!result_) result_ = constant_declarations(builder_, level_ + 1);
     exit_section_(builder_, level_, marker_, result_, false, null);
     return result_;
   }
@@ -1909,7 +1897,7 @@ public class ValaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // [attributes] (constant_declaration | method_declaration)
+  // [attributes] (constant_declarations | method_declaration)
   public static boolean enum_member(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "enum_member")) return false;
     boolean result_;
@@ -1927,11 +1915,11 @@ public class ValaParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // constant_declaration | method_declaration
+  // constant_declarations | method_declaration
   private static boolean enum_member_1(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "enum_member_1")) return false;
     boolean result_;
-    result_ = constant_declaration(builder_, level_ + 1);
+    result_ = constant_declarations(builder_, level_ + 1);
     if (!result_) result_ = method_declaration(builder_, level_ + 1);
     return result_;
   }
@@ -3224,7 +3212,7 @@ public class ValaParser implements PsiParser, LightPsiParser {
   //                        method_declaration |
   //                        signal_declaration |
   //                        field_declaration |
-  //                        constant_declaration |
+  //                        constant_declarations |
   //                        property_declaration |
   //                        interface_declaration )
   public static boolean interface_member(PsiBuilder builder_, int level_) {
@@ -3251,7 +3239,7 @@ public class ValaParser implements PsiParser, LightPsiParser {
   //                        method_declaration |
   //                        signal_declaration |
   //                        field_declaration |
-  //                        constant_declaration |
+  //                        constant_declarations |
   //                        property_declaration |
   //                        interface_declaration
   private static boolean interface_member_1(PsiBuilder builder_, int level_) {
@@ -3264,7 +3252,7 @@ public class ValaParser implements PsiParser, LightPsiParser {
     if (!result_) result_ = method_declaration(builder_, level_ + 1);
     if (!result_) result_ = signal_declaration(builder_, level_ + 1);
     if (!result_) result_ = field_declaration(builder_, level_ + 1);
-    if (!result_) result_ = constant_declaration(builder_, level_ + 1);
+    if (!result_) result_ = constant_declarations(builder_, level_ + 1);
     if (!result_) result_ = property_declaration(builder_, level_ + 1);
     if (!result_) result_ = interface_declaration(builder_, level_ + 1);
     return result_;
@@ -3667,7 +3655,7 @@ public class ValaParser implements PsiParser, LightPsiParser {
   //                         delegate_declaration |
   //                         method_declaration |
   //                         field_declaration |
-  //                         constant_declaration))* [ ( [ attributes ] ( method_declaration | statement ))* ]
+  //                         constant_declarations))* [ ( [ attributes ] ( method_declaration | statement ))* ]
   public static boolean main_block_member(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "main_block_member")) return false;
     boolean result_;
@@ -3687,7 +3675,7 @@ public class ValaParser implements PsiParser, LightPsiParser {
   //                         delegate_declaration |
   //                         method_declaration |
   //                         field_declaration |
-  //                         constant_declaration))*
+  //                         constant_declarations))*
   private static boolean main_block_member_0(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "main_block_member_0")) return false;
     while (true) {
@@ -3707,7 +3695,7 @@ public class ValaParser implements PsiParser, LightPsiParser {
   //                         delegate_declaration |
   //                         method_declaration |
   //                         field_declaration |
-  //                         constant_declaration)
+  //                         constant_declarations)
   private static boolean main_block_member_0_0(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "main_block_member_0_0")) return false;
     boolean result_;
@@ -3734,7 +3722,7 @@ public class ValaParser implements PsiParser, LightPsiParser {
   //                         delegate_declaration |
   //                         method_declaration |
   //                         field_declaration |
-  //                         constant_declaration
+  //                         constant_declarations
   private static boolean main_block_member_0_0_1(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "main_block_member_0_0_1")) return false;
     boolean result_;
@@ -3747,7 +3735,7 @@ public class ValaParser implements PsiParser, LightPsiParser {
     if (!result_) result_ = delegate_declaration(builder_, level_ + 1);
     if (!result_) result_ = method_declaration(builder_, level_ + 1);
     if (!result_) result_ = field_declaration(builder_, level_ + 1);
-    if (!result_) result_ = constant_declaration(builder_, level_ + 1);
+    if (!result_) result_ = constant_declarations(builder_, level_ + 1);
     return result_;
   }
 
@@ -4270,7 +4258,7 @@ public class ValaParser implements PsiParser, LightPsiParser {
   //                        delegate_declaration |
   //                        method_declaration |
   //                        field_declaration |
-  //                        constant_declaration)
+  //                        constant_declarations)
   public static boolean namespace_member(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "namespace_member")) return false;
     boolean result_;
@@ -4297,7 +4285,7 @@ public class ValaParser implements PsiParser, LightPsiParser {
   //                        delegate_declaration |
   //                        method_declaration |
   //                        field_declaration |
-  //                        constant_declaration
+  //                        constant_declarations
   private static boolean namespace_member_1(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "namespace_member_1")) return false;
     boolean result_;
@@ -4310,7 +4298,7 @@ public class ValaParser implements PsiParser, LightPsiParser {
     if (!result_) result_ = delegate_declaration(builder_, level_ + 1);
     if (!result_) result_ = method_declaration(builder_, level_ + 1);
     if (!result_) result_ = field_declaration(builder_, level_ + 1);
-    if (!result_) result_ = constant_declaration(builder_, level_ + 1);
+    if (!result_) result_ = constant_declarations(builder_, level_ + 1);
     return result_;
   }
 
@@ -5540,7 +5528,7 @@ public class ValaParser implements PsiParser, LightPsiParser {
   /* ********************************************************** */
   // block | SEMICOLON | object_or_array_creation_expression | with_statement | if_statement | switch_statement | while_statement | do_statement | for_statement | foreach_statement |
   //               break_statement | continue_statement | return_statement | yield_statement | throw_statement | method_declaration | local_variable_declarations | delegate_declaration |
-  //               try_statement | delete_statement | expression_statement | lock_statement | unlock_statement | constant_declaration
+  //               try_statement | delete_statement | expression_statement | lock_statement | unlock_statement | constant_declarations
   public static boolean statement(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "statement")) return false;
     boolean result_;
@@ -5568,7 +5556,7 @@ public class ValaParser implements PsiParser, LightPsiParser {
     if (!result_) result_ = expression_statement(builder_, level_ + 1);
     if (!result_) result_ = lock_statement(builder_, level_ + 1);
     if (!result_) result_ = unlock_statement(builder_, level_ + 1);
-    if (!result_) result_ = constant_declaration(builder_, level_ + 1);
+    if (!result_) result_ = constant_declarations(builder_, level_ + 1);
     exit_section_(builder_, level_, marker_, result_, false, null);
     return result_;
   }
@@ -5655,7 +5643,7 @@ public class ValaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // [ attributes ] ( field_declaration | method_declaration | constant_declaration | property_declaration | creation_method_declaration )
+  // [ attributes ] ( field_declaration | method_declaration | constant_declarations | property_declaration | creation_method_declaration )
   public static boolean struct_member(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "struct_member")) return false;
     boolean result_;
@@ -5673,13 +5661,13 @@ public class ValaParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // field_declaration | method_declaration | constant_declaration | property_declaration | creation_method_declaration
+  // field_declaration | method_declaration | constant_declarations | property_declaration | creation_method_declaration
   private static boolean struct_member_1(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "struct_member_1")) return false;
     boolean result_;
     result_ = field_declaration(builder_, level_ + 1);
     if (!result_) result_ = method_declaration(builder_, level_ + 1);
-    if (!result_) result_ = constant_declaration(builder_, level_ + 1);
+    if (!result_) result_ = constant_declarations(builder_, level_ + 1);
     if (!result_) result_ = property_declaration(builder_, level_ + 1);
     if (!result_) result_ = creation_method_declaration(builder_, level_ + 1);
     return result_;

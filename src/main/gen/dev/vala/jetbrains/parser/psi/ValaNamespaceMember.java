@@ -14,7 +14,7 @@ public interface ValaNamespaceMember extends PsiElement {
   ValaClassDeclaration getClassDeclaration();
 
   @Nullable
-  ValaConstantDeclaration getConstantDeclaration();
+  ValaConstantDeclarations getConstantDeclarations();
 
   @Nullable
   ValaDelegateDeclaration getDelegateDeclaration();

@@ -112,6 +112,10 @@ public class ValaVisitor extends PsiElementVisitor {
     visitNamedElement(o);
   }
 
+  public void visitConstantDeclarations(@NotNull ValaConstantDeclarations o) {
+    visitPsiElement(o);
+  }
+
   public void visitConstructorDeclaration(@NotNull ValaConstructorDeclaration o) {
     visitPsiElement(o);
   }
@@ -241,7 +245,7 @@ public class ValaVisitor extends PsiElementVisitor {
   }
 
   public void visitIdentifier(@NotNull ValaIdentifier o) {
-    visitNamedElement(o);
+    visitPsiElement(o);
   }
 
   public void visitIfStatement(@NotNull ValaIfStatement o) {
@@ -605,7 +609,7 @@ public class ValaVisitor extends PsiElementVisitor {
   }
 
   public void visitYieldExpression(@NotNull ValaYieldExpression o) {
-    visitNamedElement(o);
+    visitPsiElement(o);
   }
 
   public void visitYieldStatement(@NotNull ValaYieldStatement o) {

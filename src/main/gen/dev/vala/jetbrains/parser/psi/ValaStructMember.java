@@ -11,7 +11,7 @@ public interface ValaStructMember extends PsiElement {
   ValaAttributes getAttributes();
 
   @Nullable
-  ValaConstantDeclaration getConstantDeclaration();
+  ValaConstantDeclarations getConstantDeclarations();
 
   @Nullable
   ValaCreationMethodDeclaration getCreationMethodDeclaration();

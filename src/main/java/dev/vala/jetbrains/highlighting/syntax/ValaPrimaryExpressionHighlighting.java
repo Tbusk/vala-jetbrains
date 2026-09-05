@@ -6,8 +6,6 @@ import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.psi.PsiElement;
 import dev.vala.jetbrains.highlighting.ValaHighlighter;
 import dev.vala.jetbrains.highlighting.ValaTextAttributeKey;
-import dev.vala.jetbrains.parser.psi.ValaMemberAccess;
-import dev.vala.jetbrains.parser.psi.ValaSimpleName;
 import dev.vala.jetbrains.parser.psi.ValaTypes;
 import dev.vala.jetbrains.parser.psi.impl.ValaMemberAccessImpl;
 import dev.vala.jetbrains.parser.psi.impl.ValaMethodCallImpl;
@@ -35,7 +33,6 @@ public final class ValaPrimaryExpressionHighlighting implements ValaHighlighter 
             PsiElement[] children = psiElement.getChildren();
 
             highlightMethodCallIdentifiers(children, annotationHolder);
-            highlightConstantIdentifiers(children, annotationHolder);
         }
     }
 
@@ -78,40 +75,6 @@ public final class ValaPrimaryExpressionHighlighting implements ValaHighlighter 
 
                 i = currentPos;
             }
-        }
-    }
-
-    private void highlightConstantIdentifiers(PsiElement[] children, @NotNull AnnotationHolder annotationHolder) {
-
-        String constantRegex = "[A-Z0-9_]+";
-
-        for (PsiElement child : children) {
-            if (child instanceof ValaSimpleName) {
-                ASTNode identifierNode = child.getNode().findChildByType(ValaTypes.IDENTIFIER);
-
-                if (identifierNode != null && identifierNode.getText().matches(constantRegex)) {
-                    annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-                        .range(identifierNode.getTextRange())
-                        .textAttributes(ValaTextAttributeKey.CONSTANT)
-                        .create();
-                }
-            }
-
-            if (child instanceof ValaMemberAccess) {
-                ASTNode simpleNameNode = child.getNode().findChildByType(ValaTypes.SIMPLE_NAME);
-
-                if (simpleNameNode != null) {
-                    ASTNode identifierNode = simpleNameNode.findChildByType(ValaTypes.IDENTIFIER);
-
-                    if (identifierNode != null && identifierNode.getText().matches(constantRegex)) {
-                        annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-                            .range(identifierNode.getTextRange())
-                            .textAttributes(ValaTextAttributeKey.CONSTANT)
-                            .create();
-                    }
-                }
-            }
-
         }
     }
 }

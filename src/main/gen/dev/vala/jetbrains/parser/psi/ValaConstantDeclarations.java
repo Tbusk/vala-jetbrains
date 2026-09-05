@@ -4,17 +4,22 @@ package dev.vala.jetbrains.parser.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
-import dev.vala.jetbrains.psi.ValaNamedElement;
 
-public interface ValaConstantDeclaration extends ValaNamedElement {
+public interface ValaConstantDeclarations extends PsiElement {
 
   @Nullable
-  ValaExpression getExpression();
+  ValaAccessModifier getAccessModifier();
 
   @NotNull
-  ValaIdentifier getIdentifier();
+  List<ValaConstantDeclaration> getConstantDeclarationList();
 
   @Nullable
   ValaInlineArrayType getInlineArrayType();
+
+  @Nullable
+  ValaMemberDeclarationModifiers getMemberDeclarationModifiers();
+
+  @NotNull
+  ValaType getType();
 
 }

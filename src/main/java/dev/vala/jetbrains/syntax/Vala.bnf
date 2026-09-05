@@ -16,6 +16,8 @@
 
     tokens=[
 
+        LAMBDA='=>'
+
         // Equality Operators
         EQUALS_EQUALS='=='
         NOT_EQUALS='!='
@@ -126,7 +128,7 @@ main_block_member ::=
                         delegate_declaration |
                         method_declaration |
                         field_declaration |
-                        constant_declaration))* [ ( [ attributes ] ( method_declaration | statement ))* ]
+                        constant_declarations))* [ ( [ attributes ] ( method_declaration | statement ))* ]
 
 namespace_member ::= [ attributes ]
                      ( namespace_declaration |
@@ -138,15 +140,12 @@ namespace_member ::= [ attributes ]
                        delegate_declaration |
                        method_declaration |
                        field_declaration |
-                       constant_declaration)
+                       constant_declarations)
 
 // parse_symbol_name
 symbol ::= symbol_part [QUESTION_MARK] [ (DOT symbol_part [QUESTION_MARK])* ]
 
-identifier ::= IDENTIFIER_TOKEN | valid_identifier_keywords {
-    mixin="dev.vala.jetbrains.psi.ValaNamedElementImpl"
-    implements="dev.vala.jetbrains.psi.ValaNamedElement"
-}
+identifier ::= IDENTIFIER_TOKEN | valid_identifier_keywords
 symbol_part ::= ( global "::" identifier ) | identifier
 
 attributes ::= attribute*
@@ -266,8 +265,10 @@ type_arguments ::= LESS_THAN [ weak ] (type_weak | type_weak_with_parenthesis) [
 
 method_call ::= LPAREN [ arguments ] RPAREN [ object_initializer ]
 
-simple_name ::= ( ['global::'] identifier) [ type_arguments ]
-lambda_expression ::= (lambda_expression_param | lambda_expression_params) [ type_arguments ] '=' '>' lambda_expression_body
+simple_name ::= ( ['global::'] identifier) [ type_arguments ] {
+    mixin="dev.vala.jetbrains.psi.ValaSimpleNameMixin"
+}
+lambda_expression ::= (lambda_expression_param | lambda_expression_params) [ type_arguments ] LAMBDA lambda_expression_body
 
 lambda_expression_params ::= LPAREN [ lambda_expression_param [(COMMA lambda_expression_param)*]] RPAREN
 lambda_expression_param ::= [ ref | out ] identifier {
@@ -309,7 +310,7 @@ class_member ::= [ attributes ]
                    property_declaration |
                    signal_declaration |
                    field_declaration |
-                   constant_declaration |
+                   constant_declarations |
                    constructor_declaration |
                    destructor_declaration)
 
@@ -327,7 +328,7 @@ struct_declaration ::= [ access_modifier ] [ type_declaration_modifiers ] struct
                                                                              implements="dev.vala.jetbrains.psi.ValaNamedElement"
                                                                          }
 
-struct_member ::= [ attributes ] ( field_declaration | method_declaration | constant_declaration | property_declaration | creation_method_declaration )
+struct_member ::= [ attributes ] ( field_declaration | method_declaration | constant_declarations | property_declaration | creation_method_declaration )
 
 creation_method_declaration ::= [ access_modifier ] [ constructor_declaration_modifiers ] member
                                 LPAREN [ parameters ] RPAREN [ throws_statement ] [ requires_statement ] [ ensures_statement ] ( SEMICOLON | block ) {
@@ -354,11 +355,13 @@ method_declaration ::= [ access_modifier ] [ member_declaration_modifiers ] (typ
                                                                                                                                                 implements="dev.vala.jetbrains.psi.ValaNamedElement"
                                                                                                                                             }
 
-constant_declaration ::= [ access_modifier ] [ member_declaration_modifiers ] const (type [ inline_array_type ]) (identifier [ inline_array_type ])
-                         [ EQUALS expression ] [COMMA identifier [ inline_array_type ][ EQUALS expression ]] SEMICOLON {
-                                                                                                                             mixin="dev.vala.jetbrains.psi.ValaNamedElementImpl"
-                                                                                                                             implements="dev.vala.jetbrains.psi.ValaNamedElement"
-                                                                                                                         }
+constant_declarations ::= [ access_modifier ] [ member_declaration_modifiers ] const (type [ inline_array_type ])
+                          (constant_declaration (COMMA constant_declaration)*) SEMICOLON
+
+constant_declaration ::= identifier [ inline_array_type ][ EQUALS expression ] {
+                                                                                    mixin="dev.vala.jetbrains.psi.ValaNamedElementImpl"
+                                                                                    implements="dev.vala.jetbrains.psi.ValaNamedElement"
+                                                                                }
 
 inline_array_type ::= LBRACKET [ (expression | INTEGER_LITERAL | member | COMMA*) [COLON (expression | INTEGER_LITERAL | member)]] RBRACKET
 
@@ -392,13 +395,13 @@ block ::= LBRACE statement* RBRACE
 // parse_statements
 statement ::= block | SEMICOLON | object_or_array_creation_expression | with_statement | if_statement | switch_statement | while_statement | do_statement | for_statement | foreach_statement |
               break_statement | continue_statement | return_statement | yield_statement | throw_statement | method_declaration | local_variable_declarations | delegate_declaration |
-              try_statement | delete_statement | expression_statement | lock_statement | unlock_statement | constant_declaration
+              try_statement | delete_statement | expression_statement | lock_statement | unlock_statement | constant_declarations
 
 embedded_statement ::= block | embedded_statement_without_block
 
 embedded_statement_without_block ::= SEMICOLON | object_or_array_creation_expression | yield_statement | throw_statement | with_statement | if_statement | switch_statement | while_statement | for_statement |
                                      foreach_statement | break_statement | continue_statement | return_statement | method_declaration | local_variable_declarations |
-                                     try_statement | delete_statement | expression_statement | lock_statement | unlock_statement | constant_declaration
+                                     try_statement | delete_statement | expression_statement | lock_statement | unlock_statement | constant_declarations
 
 statement_expression ::= expression
 
@@ -474,10 +477,7 @@ finally_clause ::= finally block
 yield_statement ::= yield SEMICOLON | yield_expression [SEMICOLON]
 
 // -- Yield Expression, Checked Parser --
-yield_expression ::= yield [new] [ base_access DOT ] member [ (member_access | method_call)* ] {
-                                                                                                    mixin="dev.vala.jetbrains.psi.ValaNamedElementImpl"
-                                                                                                    implements="dev.vala.jetbrains.psi.ValaNamedElement"
-                                                                                                }
+yield_expression ::= yield [new] [ base_access DOT ] member [ (member_access | method_call)* ]
 
 // -- Break Statement, Checked Parser --
 break_statement ::= break SEMICOLON
@@ -558,7 +558,7 @@ enumvalues ::= enumvalue [ (COMMA enumvalue)* ] [ COMMA ]
 // enums need at least one value
 enumvalue ::= [ attributes ] identifier [ EQUALS expression ]
 // creation/construction methods explicitly are not permitted
-enum_member ::= [attributes] (constant_declaration | method_declaration)
+enum_member ::= [attributes] (constant_declarations | method_declaration)
 
 // -- Interface Declaration, Checked Parser --
 interface_declaration ::= [ access_modifier ] [ interface_type_declaration_modifiers ] interface symbol [ type_parameters ]
@@ -582,7 +582,7 @@ interface_member ::= [ attributes ]
                        method_declaration |
                        signal_declaration |
                        field_declaration |
-                       constant_declaration |
+                       constant_declarations |
                        property_declaration |
                        interface_declaration ) // interfaces area allowed to be declared in interfaces
 

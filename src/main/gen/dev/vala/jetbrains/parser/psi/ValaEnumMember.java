@@ -11,7 +11,7 @@ public interface ValaEnumMember extends PsiElement {
   ValaAttributes getAttributes();
 
   @Nullable
-  ValaConstantDeclaration getConstantDeclaration();
+  ValaConstantDeclarations getConstantDeclarations();
 
   @Nullable
   ValaMethodDeclaration getMethodDeclaration();

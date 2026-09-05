@@ -36,6 +36,7 @@ public interface ValaTypes {
   IElementType CONDITIONAL_EXPRESSION = new ValaElementType("CONDITIONAL_EXPRESSION");
   IElementType CONDITIONAL_OR_EXPRESSION = new ValaElementType("CONDITIONAL_OR_EXPRESSION");
   IElementType CONSTANT_DECLARATION = new ValaElementType("CONSTANT_DECLARATION");
+  IElementType CONSTANT_DECLARATIONS = new ValaElementType("CONSTANT_DECLARATIONS");
   IElementType CONSTRUCTOR_DECLARATION = new ValaElementType("CONSTRUCTOR_DECLARATION");
   IElementType CONSTRUCTOR_DECLARATION_MODIFIER = new ValaElementType("CONSTRUCTOR_DECLARATION_MODIFIER");
   IElementType CONSTRUCTOR_DECLARATION_MODIFIERS = new ValaElementType("CONSTRUCTOR_DECLARATION_MODIFIERS");
@@ -384,6 +385,9 @@ public interface ValaTypes {
       }
       else if (type == CONSTANT_DECLARATION) {
         return new ValaConstantDeclarationImpl(node);
+      }
+      else if (type == CONSTANT_DECLARATIONS) {
+        return new ValaConstantDeclarationsImpl(node);
       }
       else if (type == CONSTRUCTOR_DECLARATION) {
         return new ValaConstructorDeclarationImpl(node);

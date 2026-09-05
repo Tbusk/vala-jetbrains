@@ -42,8 +42,8 @@ public class ValaNamespaceMemberImpl extends ASTWrapperPsiElement implements Val
 
   @Override
   @Nullable
-  public ValaConstantDeclaration getConstantDeclaration() {
-    return findChildByClass(ValaConstantDeclaration.class);
+  public ValaConstantDeclarations getConstantDeclarations() {
+    return findChildByClass(ValaConstantDeclarations.class);
   }
 
   @Override
