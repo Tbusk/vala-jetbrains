@@ -39,8 +39,6 @@ public final class ValaLambdaExpressionHighlighting implements ValaHighlighter {
                 for (ASTNode lambdaExpressionParamNode : lamdaExpressionParamNodes) {
                     ASTNode identifierNode = lambdaExpressionParamNode.findChildByType(ValaTypes.IDENTIFIER);
 
-                    ValaSyntaxHighlightingAnnotator.addScopedElement(lambdaExpressionParamNode.getPsi());
-
                     if (identifierNode != null) {
                         util.highlightIdentifier(identifierNode.getPsi(), annotationHolder, ValaTextAttributeKey.LOCAL_VARIABLE);
                     }
@@ -51,8 +49,6 @@ public final class ValaLambdaExpressionHighlighting implements ValaHighlighter {
 
             if (lambdaExpressionParamNode != null) {
                 ASTNode identifierNode = lambdaExpressionParamNode.findChildByType(ValaTypes.IDENTIFIER);
-
-                ValaSyntaxHighlightingAnnotator.addScopedElement(lambdaExpressionParamNode.getPsi());
 
                 if (identifierNode != null) {
                     util.highlightIdentifier(identifierNode.getPsi(), annotationHolder, ValaTextAttributeKey.LOCAL_VARIABLE);

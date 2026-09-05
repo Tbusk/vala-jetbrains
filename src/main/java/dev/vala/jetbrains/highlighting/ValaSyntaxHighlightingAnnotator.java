@@ -3,16 +3,48 @@ package dev.vala.jetbrains.highlighting;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.psi.PsiElement;
-import dev.vala.jetbrains.highlighting.syntax.*;
-import dev.vala.jetbrains.psi.ValaNamedElement;
+import dev.vala.jetbrains.highlighting.syntax.ValaArgumentHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaAttributeArgumentHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaAttributeHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaCatchHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaClassDeclarationHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaConstantDeclarationHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaCreationMethodDeclarationHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaDelegateDeclarationHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaDestructorDeclarationHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaEnumDeclarationHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaEnumValueHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaErrorCodeHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaErrorDomainDeclarationHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaFieldDeclarationHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaForEachHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaInterfaceDeclarationHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaLambdaExpressionHighlighting;
+import dev.vala.jetbrains.highlighting.syntax.ValaLocalVariableDeclarationHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaMethodDeclarationHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaNamespaceDeclarationHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaObjectCreationHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaObjectOrArrayCreationExpressionHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaParameterHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaPrimaryExpressionHighlighting;
+import dev.vala.jetbrains.highlighting.syntax.ValaPropertyDeclarationHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaSignalDeclarationHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaStructDeclarationHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaTypeHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaTypeParameterHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaUsingHighlighter;
+import dev.vala.jetbrains.highlighting.syntax.ValaYieldExpressionHighlighter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.List;
 
+/**
+ * Applies PSI-local syntax highlighting for Vala declarations and a few syntactic usage forms.
+ * Highlighters must color the visited element only and must not keep shared state.
+ */
 public final class ValaSyntaxHighlightingAnnotator implements Annotator {
 
-    public static final Map<String, Set<ValaElementScope>> SCOPE_MAP = new HashMap<>();
-    public static final List<ValaHighlighter> SYNTAX_HIGHLIGHTERS = Collections.synchronizedList(List.of(
+    private static final List<ValaHighlighter> SYNTAX_HIGHLIGHTERS = List.of(
         ValaParameterHighlighter.getInstance(),
         ValaMethodDeclarationHighlighter.getInstance(),
         ValaSignalDeclarationHighlighter.getInstance(),
@@ -43,72 +75,19 @@ public final class ValaSyntaxHighlightingAnnotator implements Annotator {
         ValaCatchHighlighter.getInstance(),
         ValaLambdaExpressionHighlighting.getInstance(),
         ValaUsingHighlighter.getInstance(),
-        ValaPrimaryExpressionHighlighting.getInstance(),
-        ValaIdentifierHighlighter.getInstance()
-    ));
-    private static final Set<String> PARENTS_TO_IGNORE = Collections.synchronizedSet(new HashSet<>(
-        Set.of("ValaLocalVariableDeclaration",
-            "ValaLocalVariableDeclarations",
-            "ValaStatement",
-            "ValaParameters",
-            "ValaEmbeddedStatementWithoutBlock",
-            "ValaEmbeddedStatement",
-            "ValaFieldDeclaration",
-            "ValaClassMember",
-            "ValaNamespaceMember",
-            "ValaStructMember",
-            "ValaInterfaceMember",
-            "ValaIfStatement",
-            "ValaBlock",
-            "ValaForInitializer",
-            "ValaLambdaExpressionParams",
-            "ValaLambdaExpression"
-        )
-    ));
+        ValaPrimaryExpressionHighlighting.getInstance()
+    );
 
+    /**
+     * Highlights the given PSI element using highlighters that match its type.
+     *
+     * @param psiElement       the element being annotated in the current highlighting pass
+     * @param annotationHolder the holder that receives silent highlighting annotations
+     */
     @Override
     public void annotate(@NotNull PsiElement psiElement, @NotNull AnnotationHolder annotationHolder) {
-
         for (ValaHighlighter highlighter : SYNTAX_HIGHLIGHTERS) {
             highlighter.highlight(psiElement, annotationHolder);
-        }
-    }
-
-    public synchronized static void addScopedElement(PsiElement psiElement) {
-        if (psiElement instanceof ValaNamedElement namedElement) {
-
-            String type = psiElement.getClass().getSimpleName();
-            String typeName = type.substring(0, type.indexOf("Impl"));
-
-            PsiElement parent = psiElement.getParent();
-
-            String parentType = parent.getClass().getSimpleName();
-            String parentTypeName = parentType.substring(0, parentType.indexOf("Impl"));
-
-            while (PARENTS_TO_IGNORE.contains(parentTypeName)) {
-                parent = parent.getParent();
-
-                parentType = parent.getClass().getSimpleName();
-                parentTypeName = parentType.substring(0, parentType.indexOf("Impl"));
-            }
-
-            String scopeName = String.format("%s.%s", psiElement.getContainingFile().getName(), namedElement.getName());
-
-            ValaElementScope scope = new ValaElementScope(
-                namedElement.getName(),
-                typeName,
-                namedElement.getTextRange(),
-                parentTypeName,
-                parent.getTextRange()
-            );
-
-            if (SCOPE_MAP.containsKey(scopeName)) {
-                SCOPE_MAP.get(scopeName).add(scope);
-            } else {
-                Set<ValaElementScope> scopeSet = new HashSet<>();
-                scopeSet.add(scope);
-                SCOPE_MAP.put(scopeName, scopeSet);
-            }
         }
     }
 }

@@ -4,10 +4,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.TokenSet;
-import dev.vala.jetbrains.highlighting.ValaElementScope;
 import dev.vala.jetbrains.highlighting.ValaHighlighter;
-import dev.vala.jetbrains.highlighting.ValaSyntaxHighlightingAnnotator;
 import dev.vala.jetbrains.highlighting.ValaTextAttributeKey;
 import dev.vala.jetbrains.parser.psi.ValaMemberAccess;
 import dev.vala.jetbrains.parser.psi.ValaSimpleName;
@@ -17,8 +14,6 @@ import dev.vala.jetbrains.parser.psi.impl.ValaMethodCallImpl;
 import dev.vala.jetbrains.parser.psi.impl.ValaPrimaryExpressionImpl;
 import dev.vala.jetbrains.parser.psi.impl.ValaSimpleNameImpl;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Set;
 
 public final class ValaPrimaryExpressionHighlighting implements ValaHighlighter {
     private static volatile ValaPrimaryExpressionHighlighting instance;
@@ -41,7 +36,6 @@ public final class ValaPrimaryExpressionHighlighting implements ValaHighlighter 
 
             highlightMethodCallIdentifiers(children, annotationHolder);
             highlightConstantIdentifiers(children, annotationHolder);
-            highlightOtherIdentifiers(psiElement, annotationHolder);
         }
     }
 
@@ -119,107 +113,5 @@ public final class ValaPrimaryExpressionHighlighting implements ValaHighlighter 
             }
 
         }
-    }
-
-    private void highlightOtherIdentifiers(@NotNull PsiElement psiElement, @NotNull AnnotationHolder annotationHolder) {
-
-        ASTNode[] simpleNameNodes = psiElement.getNode().getChildren(TokenSet.create(ValaTypes.SIMPLE_NAME));
-        for (ASTNode simpleNameNode : simpleNameNodes) {
-            ASTNode identifierNode = simpleNameNode.findChildByType(ValaTypes.IDENTIFIER);
-
-            if (identifierNode != null) {
-
-                String scopeKey = String.format("%s.%s", identifierNode.getPsi().getContainingFile().getName(), identifierNode.getText());
-
-                if (!ValaSyntaxHighlightingAnnotator.SCOPE_MAP.containsKey(scopeKey)) {
-
-                    annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-                        .range(identifierNode.getTextRange())
-                        .textAttributes(ValaTextAttributeKey.INSTANCE_VARIABLE)
-                        .create();
-                } else {
-                    Set<ValaElementScope> scopes = ValaSyntaxHighlightingAnnotator.SCOPE_MAP.get(scopeKey);
-
-                    for (ValaElementScope scope : scopes) {
-                        int identifierStart = identifierNode.getPsi().getTextRange().getStartOffset();
-                        if (!(scope.parentRange().getStartOffset() <= identifierStart && scope.parentRange().getEndOffset() >= identifierStart)) {
-                            annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-                                .range(identifierNode.getTextRange())
-                                .textAttributes(ValaTextAttributeKey.INSTANCE_VARIABLE)
-                                .create();
-                        }
-                    }
-                }
-            }
-        }
-
-        ASTNode[] memberAccessNodes = psiElement.getNode().getChildren(TokenSet.create(ValaTypes.MEMBER_ACCESS));
-        for (ASTNode memberAccessNode : memberAccessNodes) {
-            ASTNode simpleNameNode = memberAccessNode.findChildByType(ValaTypes.SIMPLE_NAME);
-
-            if (simpleNameNode != null) {
-                ASTNode identifierNode = simpleNameNode.findChildByType(ValaTypes.IDENTIFIER);
-
-                if (identifierNode != null) {
-
-                    String scopeKey = String.format("%s.%s", identifierNode.getPsi().getContainingFile().getName(), identifierNode.getText());
-
-                    if (!ValaSyntaxHighlightingAnnotator.SCOPE_MAP.containsKey(scopeKey)) {
-                        annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-                            .range(identifierNode.getTextRange())
-                            .textAttributes(ValaTextAttributeKey.INSTANCE_VARIABLE)
-                            .create();
-                    } else {
-                        Set<ValaElementScope> scopes = ValaSyntaxHighlightingAnnotator.SCOPE_MAP.get(scopeKey);
-
-                        for (ValaElementScope scope : scopes) {
-                            int identifierStart = identifierNode.getPsi().getTextRange().getStartOffset();
-                            if (!(scope.parentRange().getStartOffset() <= identifierStart && scope.parentRange().getEndOffset() >= identifierStart)) {
-                                annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-                                    .range(identifierNode.getTextRange())
-                                    .textAttributes(ValaTextAttributeKey.INSTANCE_VARIABLE)
-                                    .create();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        ASTNode[] memberNodes = psiElement.getNode().getChildren(TokenSet.create(ValaTypes.MEMBER));
-        for (ASTNode memberNode : memberNodes) {
-            ASTNode[] memberPartNodes = memberNode.getChildren(TokenSet.create(ValaTypes.MEMBER_PART));
-
-            for (ASTNode memberPartNode : memberPartNodes) {
-                ASTNode identifierNode = memberPartNode.findChildByType(TokenSet.create(ValaTypes.IDENTIFIER));
-
-                if (identifierNode != null) {
-
-                    String scopeKey = String.format("%s.%s", identifierNode.getPsi().getContainingFile().getName(), identifierNode.getText());
-
-                    if (!ValaSyntaxHighlightingAnnotator.SCOPE_MAP.containsKey(scopeKey)) {
-                        annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-                            .range(identifierNode.getTextRange())
-                            .textAttributes(ValaTextAttributeKey.INSTANCE_VARIABLE)
-                            .create();
-                    } else {
-                        Set<ValaElementScope> scopes = ValaSyntaxHighlightingAnnotator.SCOPE_MAP.get(scopeKey);
-
-                        for (ValaElementScope scope : scopes) {
-                            int identifierStart = identifierNode.getPsi().getTextRange().getStartOffset();
-                            if (!(scope.parentRange().getStartOffset() <= identifierStart && scope.parentRange().getEndOffset() >= identifierStart)) {
-                                annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-                                    .range(identifierNode.getTextRange())
-                                    .textAttributes(ValaTextAttributeKey.INSTANCE_VARIABLE)
-                                    .create();
-                            }
-                        }
-                    }
-                }
-
-            }
-
-        }
-
     }
 }
