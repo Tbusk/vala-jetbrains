@@ -63,12 +63,16 @@ public class IntegrationTestUtils {
             assert (psiFile != null) : "psiFile cannot be null";
 
             if (PsiTreeUtil.hasErrorElements(psiFile) && !errorsToIgnore.contains(fileName)) {
-                errorFileNames.add(fileName);
-                log.error("Failed to parse for '{}'", testFilePath);
+                errorFileNames.add(testFilePath.toString());
             }
         }
 
-        assert (errorFileNames.size() <= allowableErrors) : "Regression found. Only can have a max of " + allowableErrors + " errors while there are " + errorFileNames.size() + " errors.";
+        assert (errorFileNames.size() <= allowableErrors) : String.format(
+            "Regression found. Only can have a max of %d errors while there are %d errors. Failing files: %s",
+            allowableErrors,
+            errorFileNames.size(),
+            errorFileNames
+        );
 
         final int testsPassed = files.size() - errorFileNames.size();
         log.info("Pass rate: {}/{}", testsPassed, files.size());
