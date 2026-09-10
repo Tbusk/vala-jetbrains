@@ -636,7 +636,6 @@ valid_identifier_keywords ::= ( abstract
                             | signal
                             | sizeof
                             | static
-                            | struct
                             | switch
                             | typeof
                             | unlock

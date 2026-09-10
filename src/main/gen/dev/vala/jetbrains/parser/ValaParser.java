@@ -7008,7 +7008,6 @@ public class ValaParser implements PsiParser, LightPsiParser {
   //                             | signal
   //                             | sizeof
   //                             | static
-  //                             | struct
   //                             | switch
   //                             | typeof
   //                             | unlock
@@ -7078,7 +7077,6 @@ public class ValaParser implements PsiParser, LightPsiParser {
   //                             | signal
   //                             | sizeof
   //                             | static
-  //                             | struct
   //                             | switch
   //                             | typeof
   //                             | unlock
@@ -7141,7 +7139,6 @@ public class ValaParser implements PsiParser, LightPsiParser {
     if (!result_) result_ = consumeToken(builder_, SIGNAL);
     if (!result_) result_ = consumeToken(builder_, SIZEOF);
     if (!result_) result_ = consumeToken(builder_, STATIC);
-    if (!result_) result_ = consumeToken(builder_, STRUCT);
     if (!result_) result_ = consumeToken(builder_, SWITCH);
     if (!result_) result_ = consumeToken(builder_, TYPEOF);
     if (!result_) result_ = consumeToken(builder_, UNLOCK);
