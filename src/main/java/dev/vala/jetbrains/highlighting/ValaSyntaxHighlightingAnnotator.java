@@ -185,43 +185,59 @@ public final class ValaSyntaxHighlightingAnnotator implements Annotator {
         }
     }
 
-    private PsiElement getDeclarationIdentifier(PsiElement psiElement) {
-        switch (psiElement) {
-            case ValaSymbol symbol -> {
-                return symbol;
-            }
-            case ValaMember member -> {
-                return member;
-            }
-            case ValaIdentifier identifier -> {
-                return identifier;
-            }
-            default -> {
-                return null;
-            }
-        }
-    }
-
     private void highlight(PsiElement name, AnnotationHolder annotationHolder, TextAttributesKey attributeKey) {
 
         if (name == null) {
             return;
         }
 
-        annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-            .range(name)
-            .textAttributes(attributeKey)
-            .create();
+        switch (name) {
+            case ValaIdentifier identifier -> {
+                if (identifier != null) {
+                    annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
+                        .range(identifier)
+                        .textAttributes(attributeKey)
+                        .create();
+                }
+            }
+            case ValaSymbol symbol -> {
+                List<ValaSymbolPart> symbolParts = symbol.getSymbolPartList();
+
+                for (ValaSymbolPart symbolPart : symbolParts) {
+                    annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
+                        .range(symbolPart.getIdentifier())
+                        .textAttributes(attributeKey)
+                        .create();
+                }
+            }
+            case ValaMember member -> {
+                List<ValaMemberPart> memberParts = member.getMemberPartList();
+
+                for (ValaMemberPart memberPart : memberParts) {
+                    annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
+                        .range(memberPart.getIdentifier())
+                        .textAttributes(attributeKey)
+                        .create();
+                }
+            }
+            case ValaSimpleName simpleName -> { 
+                annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
+                    .range(simpleName.getIdentifier())
+                    .textAttributes(attributeKey)
+                    .create();
+            }
+            default -> {
+                return;
+            }
+        }
     }
 
     private void highlightReferences(ValaSimpleName simpleName, PsiElement resolved, AnnotationHolder annotationHolder) {
-        ValaHighlighterUtil util = ValaHighlighterUtil.getInstance();
 
         if (PsiTreeUtil.instanceOf(resolved, ValaInterfaceDeclaration.class)) {
-            util.highlightIdentifier(simpleName, annotationHolder, ValaTextAttributeKey.INTERFACE_NAME);
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.INTERFACE_NAME);
             return;
         }
-
         if (PsiTreeUtil.instanceOf(resolved, 
             ValaClassDeclaration.class,
             ValaStructDeclaration.class,
@@ -230,7 +246,7 @@ public final class ValaSyntaxHighlightingAnnotator implements Annotator {
             ValaNamespaceDeclaration.class,
             ValaDelegateDeclaration.class
         )) {
-            util.highlightIdentifier(simpleName, annotationHolder, ValaTextAttributeKey.STRUCTURE_NAMES);
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.STRUCTURE_NAMES);
             return;
         }
 
@@ -241,7 +257,7 @@ public final class ValaSyntaxHighlightingAnnotator implements Annotator {
             ValaDestructorDeclaration.class,
             ValaYieldExpression.class
         )) {
-            util.highlightMember(simpleName, annotationHolder, ValaTextAttributeKey.METHOD_CALL);
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.METHOD_CALL);
             return;
         }
 
@@ -252,7 +268,7 @@ public final class ValaSyntaxHighlightingAnnotator implements Annotator {
             ValaForeachStatement.class,
             ValaLocalTupleDeclaration.class
         )) {
-            util.highlightIdentifier(simpleName, annotationHolder, ValaTextAttributeKey.LOCAL_VARIABLE);
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.LOCAL_VARIABLE);
             return;
         }
 
@@ -262,7 +278,7 @@ public final class ValaSyntaxHighlightingAnnotator implements Annotator {
             ValaLambdaExpressionParam.class,
             ValaNamedArgument.class
         )) {
-            util.highlightIdentifier(simpleName, annotationHolder, ValaTextAttributeKey.PARAMETER);
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.PARAMETER);
             return;
         }
 
@@ -271,7 +287,7 @@ public final class ValaSyntaxHighlightingAnnotator implements Annotator {
             ValaConstantDeclaration.class,
             ValaEnumvalue.class
         )) {
-            util.highlightIdentifier(simpleName, annotationHolder, ValaTextAttributeKey.CONSTANT);
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.CONSTANT);
             return;
         }
 
@@ -281,7 +297,7 @@ public final class ValaSyntaxHighlightingAnnotator implements Annotator {
             ValaPropertyDeclaration.class,
             ValaSignalDeclaration.class
         )) {
-            util.highlightIdentifier(simpleName, annotationHolder, ValaTextAttributeKey.INSTANCE_VARIABLE);
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.INSTANCE_VARIABLE);
             return;
         }
     }
