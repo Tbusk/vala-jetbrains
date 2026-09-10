@@ -8,10 +8,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.util.PsiTreeUtil;
 import dev.vala.jetbrains.parser.psi.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-
-import org.jetbrains.annotations.NotNull;
 
 
 /**
@@ -85,7 +84,7 @@ public final class ValaSyntaxHighlightingAnnotator implements Annotator {
 
             }
             case ValaPropertyDeclaration propertyDeclaration -> {
-                highlight(propertyDeclaration.getIdentifier(), annotationHolder, ValaTextAttributeKey.INSTANCE_VARIABLE);
+                highlight(propertyDeclaration.getIdentifier(), annotationHolder, ValaTextAttributeKey.PROPERTY);
             }
             case ValaParameter parameter -> {
                 highlight(parameter.getIdentifier(), annotationHolder, ValaTextAttributeKey.PARAMETER);
@@ -103,40 +102,40 @@ public final class ValaSyntaxHighlightingAnnotator implements Annotator {
                 highlight(methodDeclaration.getMember(), annotationHolder, ValaTextAttributeKey.METHOD_DECLARATION);
             }
             case ValaSignalDeclaration signalDeclaration -> {
-                highlight(signalDeclaration.getIdentifier(), annotationHolder, ValaTextAttributeKey.METHOD_DECLARATION);
+                highlight(signalDeclaration.getIdentifier(), annotationHolder, ValaTextAttributeKey.SIGNAL);
             }
             case ValaCreationMethodDeclaration creationMethodDeclaration -> {
-                highlight(creationMethodDeclaration.getMember(), annotationHolder, ValaTextAttributeKey.METHOD_DECLARATION);
+                highlight(creationMethodDeclaration.getMember(), annotationHolder, ValaTextAttributeKey.CREATION_METHOD);
             }
             case ValaDestructorDeclaration destructorDeclaration -> {
-                highlight(destructorDeclaration.getIdentifier(), annotationHolder, ValaTextAttributeKey.METHOD_DECLARATION);
+                highlight(destructorDeclaration.getIdentifier(), annotationHolder, ValaTextAttributeKey.DESTRUCTOR);
             }
             case ValaDelegateDeclaration delegateDeclaration -> {
-                highlight(delegateDeclaration.getSymbol(), annotationHolder, ValaTextAttributeKey.STRUCTURE_NAMES);
+                highlight(delegateDeclaration.getSymbol(), annotationHolder, ValaTextAttributeKey.DELEGATE_NAME);
             }
             case ValaNamespaceDeclaration namespaceDeclaration -> {
-                highlight(namespaceDeclaration.getSymbol(), annotationHolder, ValaTextAttributeKey.STRUCTURE_NAMES);
+                highlight(namespaceDeclaration.getSymbol(), annotationHolder, ValaTextAttributeKey.NAMESPACE_NAME);
             }
             case ValaInterfaceDeclaration interfaceDeclaration -> {
                 highlight(interfaceDeclaration.getSymbol(), annotationHolder, ValaTextAttributeKey.INTERFACE_NAME);
             }
             case ValaClassDeclaration classDeclaration -> {
-                highlight(classDeclaration.getSymbol(), annotationHolder, ValaTextAttributeKey.STRUCTURE_NAMES);
+                highlight(classDeclaration.getSymbol(), annotationHolder, ValaTextAttributeKey.CLASS_NAME);
             }
             case ValaStructDeclaration structDeclaration -> {
-                highlight(structDeclaration.getSymbol(), annotationHolder, ValaTextAttributeKey.STRUCTURE_NAMES);
+                highlight(structDeclaration.getSymbol(), annotationHolder, ValaTextAttributeKey.STRUCT_NAME);
             }
             case ValaEnumDeclaration enumDeclaration -> {
-                highlight(enumDeclaration.getSymbol(), annotationHolder, ValaTextAttributeKey.STRUCTURE_NAMES);
+                highlight(enumDeclaration.getSymbol(), annotationHolder, ValaTextAttributeKey.ENUM_NAME);
             }
             case ValaErrordomainDeclaration errordomainDeclaration -> {
-                highlight(errordomainDeclaration.getSymbol(), annotationHolder, ValaTextAttributeKey.STRUCTURE_NAMES);
+                highlight(errordomainDeclaration.getSymbol(), annotationHolder, ValaTextAttributeKey.ERRORDOMAIN_NAME);
             }
             case ValaErrorcode errorcode -> {
-                highlight(errorcode.getIdentifier(), annotationHolder, ValaTextAttributeKey.CONSTANT);
+                highlight(errorcode.getIdentifier(), annotationHolder, ValaTextAttributeKey.ERROR_CODE);
             }
             case ValaEnumvalue enumvalue -> {
-                highlight(enumvalue.getIdentifier(), annotationHolder, ValaTextAttributeKey.CONSTANT);
+                highlight(enumvalue.getIdentifier(), annotationHolder, ValaTextAttributeKey.ENUM_VALUE);
             }
             case ValaForeachStatement foreachStatement -> {
                 highlight(foreachStatement.getIdentifier(), annotationHolder, ValaTextAttributeKey.LOCAL_VARIABLE);
@@ -162,10 +161,10 @@ public final class ValaSyntaxHighlightingAnnotator implements Annotator {
     private void highlightMisc(PsiElement psiElement, AnnotationHolder annotationHolder) {
         switch (psiElement) {
             case ValaType type -> {
-                highlight(type.getSymbol(), annotationHolder, ValaTextAttributeKey.STRUCTURE_NAMES);
+                highlight(type.getSymbol(), annotationHolder, ValaTextAttributeKey.TYPE_NAME);
             }
             case ValaTypeWeak weakType -> {
-                highlight(weakType.getSymbol(), annotationHolder, ValaTextAttributeKey.STRUCTURE_NAMES);
+                highlight(weakType.getSymbol(), annotationHolder, ValaTextAttributeKey.TYPE_NAME);
             }
             case ValaAttribute attribute -> {
                 highlight(attribute.getIdentifier(), annotationHolder, ValaTextAttributeKey.ATTRIBUTE);
@@ -174,7 +173,7 @@ public final class ValaSyntaxHighlightingAnnotator implements Annotator {
                 highlight(attributeArgument.getIdentifier(), annotationHolder, ValaTextAttributeKey.PARAMETER);
             }
             case ValaUsingDirective usingDirective -> {
-                highlight(usingDirective.getSymbol(), annotationHolder, ValaTextAttributeKey.STRUCTURE_NAMES);
+                highlight(usingDirective.getSymbol(), annotationHolder, ValaTextAttributeKey.TYPE_NAME);
             }
             case ValaMemberInitializer memberInitializer -> {
                 highlight(memberInitializer.getIdentifier(), annotationHolder, ValaTextAttributeKey.OBJECT_INITIALIZER);
@@ -193,12 +192,10 @@ public final class ValaSyntaxHighlightingAnnotator implements Annotator {
 
         switch (name) {
             case ValaIdentifier identifier -> {
-                if (identifier != null) {
-                    annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-                        .range(identifier)
-                        .textAttributes(attributeKey)
-                        .create();
-                }
+                annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
+                    .range(identifier)
+                    .textAttributes(attributeKey)
+                    .create();
             }
             case ValaSymbol symbol -> {
                 List<ValaSymbolPart> symbolParts = symbol.getSymbolPartList();
@@ -220,7 +217,7 @@ public final class ValaSyntaxHighlightingAnnotator implements Annotator {
                         .create();
                 }
             }
-            case ValaSimpleName simpleName -> { 
+            case ValaSimpleName simpleName -> {
                 annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
                     .range(simpleName.getIdentifier())
                     .textAttributes(attributeKey)
@@ -238,15 +235,28 @@ public final class ValaSyntaxHighlightingAnnotator implements Annotator {
             highlight(simpleName, annotationHolder, ValaTextAttributeKey.INTERFACE_NAME);
             return;
         }
-        if (PsiTreeUtil.instanceOf(resolved, 
-            ValaClassDeclaration.class,
-            ValaStructDeclaration.class,
-            ValaEnumDeclaration.class,
-            ValaErrordomainDeclaration.class,
-            ValaNamespaceDeclaration.class,
-            ValaDelegateDeclaration.class
-        )) {
-            highlight(simpleName, annotationHolder, ValaTextAttributeKey.STRUCTURE_NAMES);
+        if (PsiTreeUtil.instanceOf(resolved, ValaClassDeclaration.class)) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.CLASS_NAME);
+            return;
+        }
+        if (PsiTreeUtil.instanceOf(resolved, ValaStructDeclaration.class)) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.STRUCT_NAME);
+            return;
+        }
+        if (PsiTreeUtil.instanceOf(resolved, ValaEnumDeclaration.class)) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.ENUM_NAME);
+            return;
+        }
+        if (PsiTreeUtil.instanceOf(resolved, ValaErrordomainDeclaration.class)) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.ERRORDOMAIN_NAME);
+            return;
+        }
+        if (PsiTreeUtil.instanceOf(resolved, ValaNamespaceDeclaration.class)) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.NAMESPACE_NAME);
+            return;
+        }
+        if (PsiTreeUtil.instanceOf(resolved, ValaDelegateDeclaration.class)) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.DELEGATE_NAME);
             return;
         }
 
@@ -282,22 +292,42 @@ public final class ValaSyntaxHighlightingAnnotator implements Annotator {
             return;
         }
 
-        if (PsiTreeUtil.instanceOf(
-            resolved,
-            ValaConstantDeclaration.class,
-            ValaEnumvalue.class
-        )) {
+        if (PsiTreeUtil.instanceOf(resolved, ValaConstantDeclaration.class)) {
             highlight(simpleName, annotationHolder, ValaTextAttributeKey.CONSTANT);
             return;
         }
 
-        if (PsiTreeUtil.instanceOf(
-            resolved,
-            ValaFieldDeclarationSection.class,
-            ValaPropertyDeclaration.class,
-            ValaSignalDeclaration.class
-        )) {
-            highlight(simpleName, annotationHolder, ValaTextAttributeKey.INSTANCE_VARIABLE);
+        if (PsiTreeUtil.instanceOf(resolved, ValaEnumvalue.class)) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.ENUM_VALUE);
+            return;
+        }
+
+        if (PsiTreeUtil.instanceOf(resolved, ValaErrorcode.class)) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.ERROR_CODE);
+            return;
+        }
+
+        if (PsiTreeUtil.instanceOf(resolved, ValaPropertyDeclaration.class)) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.PROPERTY);
+            return;
+        }
+
+        if (PsiTreeUtil.instanceOf(resolved, ValaSignalDeclaration.class)) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.SIGNAL);
+            return;
+        }
+
+        if (resolved instanceof ValaFieldDeclarationSection fieldSection) {
+            ValaFieldDeclaration fieldDeclaration = PsiTreeUtil.getParentOfType(fieldSection, ValaFieldDeclaration.class);
+            ValaMemberDeclarationModifiers modifiers = fieldDeclaration == null
+                ? null
+                : fieldDeclaration.getMemberDeclarationModifiers();
+
+            if (modifiers != null && modifiers.getText().contains("static")) {
+                highlight(simpleName, annotationHolder, ValaTextAttributeKey.STATIC_VARIABLE);
+            } else {
+                highlight(simpleName, annotationHolder, ValaTextAttributeKey.INSTANCE_VARIABLE);
+            }
             return;
         }
     }

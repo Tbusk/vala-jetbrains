@@ -72,8 +72,40 @@ public class ValaTextAttributeKey {
         "VALA_METHOD_DECLARATION",
         DefaultLanguageHighlighterColors.FUNCTION_DECLARATION
     );
-    public static final TextAttributesKey STRUCTURE_NAMES = TextAttributesKey.createTextAttributesKey(
-        "VALA_STRUCTURE_NAME",
+    public static final TextAttributesKey CREATION_METHOD = TextAttributesKey.createTextAttributesKey(
+        "VALA_CREATION_METHOD",
+        DefaultLanguageHighlighterColors.FUNCTION_DECLARATION
+    );
+    public static final TextAttributesKey DESTRUCTOR = TextAttributesKey.createTextAttributesKey(
+        "VALA_DESTRUCTOR",
+        DefaultLanguageHighlighterColors.FUNCTION_DECLARATION
+    );
+    public static final TextAttributesKey TYPE_NAME = TextAttributesKey.createTextAttributesKey(
+        "VALA_TYPE_NAME",
+        DefaultLanguageHighlighterColors.CLASS_NAME
+    );
+    public static final TextAttributesKey CLASS_NAME = TextAttributesKey.createTextAttributesKey(
+        "VALA_CLASS_NAME",
+        DefaultLanguageHighlighterColors.CLASS_NAME
+    );
+    public static final TextAttributesKey STRUCT_NAME = TextAttributesKey.createTextAttributesKey(
+        "VALA_STRUCT_NAME",
+        DefaultLanguageHighlighterColors.CLASS_NAME
+    );
+    public static final TextAttributesKey ENUM_NAME = TextAttributesKey.createTextAttributesKey(
+        "VALA_ENUM_NAME",
+        DefaultLanguageHighlighterColors.CLASS_NAME
+    );
+    public static final TextAttributesKey ERRORDOMAIN_NAME = TextAttributesKey.createTextAttributesKey(
+        "VALA_ERRORDOMAIN_NAME",
+        DefaultLanguageHighlighterColors.CLASS_NAME
+    );
+    public static final TextAttributesKey NAMESPACE_NAME = TextAttributesKey.createTextAttributesKey(
+        "VALA_NAMESPACE_NAME",
+        DefaultLanguageHighlighterColors.CLASS_NAME
+    );
+    public static final TextAttributesKey DELEGATE_NAME = TextAttributesKey.createTextAttributesKey(
+        "VALA_DELEGATE_NAME",
         DefaultLanguageHighlighterColors.CLASS_NAME
     );
     public static final TextAttributesKey INTERFACE_NAME = TextAttributesKey.createTextAttributesKey(
@@ -82,6 +114,14 @@ public class ValaTextAttributeKey {
     );
     public static final TextAttributesKey CONSTANT = TextAttributesKey.createTextAttributesKey(
         "VALA_CONSTANT",
+        DefaultLanguageHighlighterColors.CONSTANT
+    );
+    public static final TextAttributesKey ENUM_VALUE = TextAttributesKey.createTextAttributesKey(
+        "VALA_ENUM_VALUE",
+        DefaultLanguageHighlighterColors.CONSTANT
+    );
+    public static final TextAttributesKey ERROR_CODE = TextAttributesKey.createTextAttributesKey(
+        "VALA_ERROR_CODE",
         DefaultLanguageHighlighterColors.CONSTANT
     );
     public static final TextAttributesKey PARAMETER = TextAttributesKey.createTextAttributesKey(
@@ -102,6 +142,16 @@ public class ValaTextAttributeKey {
     public static final TextAttributesKey INSTANCE_VARIABLE = TextAttributesKey.createTextAttributesKey(
         "VALA_INSTANCE_VARIABLE",
         DefaultLanguageHighlighterColors.INSTANCE_FIELD
+    );
+
+    public static final TextAttributesKey PROPERTY = TextAttributesKey.createTextAttributesKey(
+        "VALA_PROPERTY",
+        DefaultLanguageHighlighterColors.INSTANCE_FIELD
+    );
+
+    public static final TextAttributesKey SIGNAL = TextAttributesKey.createTextAttributesKey(
+        "VALA_SIGNAL",
+        DefaultLanguageHighlighterColors.FUNCTION_DECLARATION
     );
 
     public static final TextAttributesKey STATIC_VARIABLE = TextAttributesKey.createTextAttributesKey(
