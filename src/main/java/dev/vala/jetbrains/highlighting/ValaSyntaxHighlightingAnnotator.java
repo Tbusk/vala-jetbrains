@@ -2,113 +2,333 @@ package dev.vala.jetbrains.highlighting;
 
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
+import com.intellij.lang.annotation.HighlightSeverity;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
-import dev.vala.jetbrains.highlighting.syntax.*;
-import dev.vala.jetbrains.psi.ValaNamedElement;
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.util.PsiTreeUtil;
+import dev.vala.jetbrains.parser.psi.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.List;
 
+
+/**
+ * Applies PSI-local syntax highlighting for Vala declarations and a few syntactic usage forms.
+ * Highlighters must color the visited element only and must not keep shared state.
+ */
 public final class ValaSyntaxHighlightingAnnotator implements Annotator {
 
-    public static final Map<String, Set<ValaElementScope>> SCOPE_MAP = new HashMap<>();
-    public static final List<ValaHighlighter> SYNTAX_HIGHLIGHTERS = Collections.synchronizedList(List.of(
-        ValaParameterHighlighter.getInstance(),
-        ValaMethodDeclarationHighlighter.getInstance(),
-        ValaSignalDeclarationHighlighter.getInstance(),
-        ValaInterfaceDeclarationHighlighter.getInstance(),
-        ValaLocalVariableDeclarationHighlighter.getInstance(),
-        ValaConstantDeclarationHighlighter.getInstance(),
-        ValaAttributeHighlighter.getInstance(),
-        ValaAttributeArgumentHighlighter.getInstance(),
-        ValaTypeHighlighter.getInstance(),
-        ValaObjectCreationHighlighter.getInstance(),
-        ValaFieldDeclarationHighlighter.getInstance(),
-        ValaObjectOrArrayCreationExpressionHighlighter.getInstance(),
-        ValaTypeParameterHighlighter.getInstance(),
-        ValaArgumentHighlighter.getInstance(),
-        ValaErrorCodeHighlighter.getInstance(),
-        ValaEnumValueHighlighter.getInstance(),
-        ValaClassDeclarationHighlighter.getInstance(),
-        ValaEnumDeclarationHighlighter.getInstance(),
-        ValaStructDeclarationHighlighter.getInstance(),
-        ValaErrorDomainDeclarationHighlighter.getInstance(),
-        ValaNamespaceDeclarationHighlighter.getInstance(),
-        ValaDelegateDeclarationHighlighter.getInstance(),
-        ValaCreationMethodDeclarationHighlighter.getInstance(),
-        ValaPropertyDeclarationHighlighter.getInstance(),
-        ValaYieldExpressionHighlighter.getInstance(),
-        ValaDestructorDeclarationHighlighter.getInstance(),
-        ValaForEachHighlighter.getInstance(),
-        ValaCatchHighlighter.getInstance(),
-        ValaLambdaExpressionHighlighting.getInstance(),
-        ValaUsingHighlighter.getInstance(),
-        ValaPrimaryExpressionHighlighting.getInstance(),
-        ValaIdentifierHighlighter.getInstance()
-    ));
-    private static final Set<String> PARENTS_TO_IGNORE = Collections.synchronizedSet(new HashSet<>(
-        Set.of("ValaLocalVariableDeclaration",
-            "ValaLocalVariableDeclarations",
-            "ValaStatement",
-            "ValaParameters",
-            "ValaEmbeddedStatementWithoutBlock",
-            "ValaEmbeddedStatement",
-            "ValaFieldDeclaration",
-            "ValaClassMember",
-            "ValaNamespaceMember",
-            "ValaStructMember",
-            "ValaInterfaceMember",
-            "ValaIfStatement",
-            "ValaBlock",
-            "ValaForInitializer",
-            "ValaLambdaExpressionParams",
-            "ValaLambdaExpression"
-        )
-    ));
-
+    /**
+     * Highlights the given PSI element using highlighters that match its type.
+     *
+     * @param psiElement       the element being annotated in the current highlighting pass
+     * @param annotationHolder the holder that receives silent highlighting annotations
+     */
     @Override
     public void annotate(@NotNull PsiElement psiElement, @NotNull AnnotationHolder annotationHolder) {
+        highlightDeclarations(psiElement, annotationHolder);
+        highlightMisc(psiElement, annotationHolder);
 
-        for (ValaHighlighter highlighter : SYNTAX_HIGHLIGHTERS) {
-            highlighter.highlight(psiElement, annotationHolder);
+        if (!(psiElement instanceof ValaSimpleName simpleName)) {
+            return;
+        }
+
+        PsiReference reference = simpleName.getReference();
+        PsiElement resolved = reference == null ? null : reference.resolve();
+
+        if (resolved != null) {
+            highlightReferences(simpleName, resolved, annotationHolder);
+            return;
+        }
+
+        if (isCalled(simpleName)) {
+            highlight(simpleName.getIdentifier(), annotationHolder, ValaTextAttributeKey.METHOD_CALL);
+            return;
+        }
+
+        if (simpleName.getIdentifier().getText().matches("^[A-Z_][A-Z0-9_]*$")) {
+            highlight(simpleName.getIdentifier(), annotationHolder, ValaTextAttributeKey.CONSTANT);
         }
     }
 
-    public synchronized static void addScopedElement(PsiElement psiElement) {
-        if (psiElement instanceof ValaNamedElement namedElement) {
+    private static boolean isCalled(ValaSimpleName simpleName) {
+        PsiElement afterName = PsiTreeUtil.skipWhitespacesAndCommentsForward(simpleName);
+        if (afterName instanceof ValaMethodCall) {
+            return true;
+        }
 
-            String type = psiElement.getClass().getSimpleName();
-            String typeName = type.substring(0, type.indexOf("Impl"));
+        PsiElement parent = simpleName.getParent();
+        if (parent instanceof ValaMemberAccess) {
+            PsiElement afterAccess = PsiTreeUtil.skipWhitespacesAndCommentsForward(parent);
+            return afterAccess instanceof ValaMethodCall;
+        }
 
-            PsiElement parent = psiElement.getParent();
+        return false;
+    }
 
-            String parentType = parent.getClass().getSimpleName();
-            String parentTypeName = parentType.substring(0, parentType.indexOf("Impl"));
+    private void highlightDeclarations(PsiElement psiElement, AnnotationHolder annotationHolder) {
+        switch (psiElement) {
+            case ValaFieldDeclaration fieldDeclaration -> {
+                ValaMemberDeclarationModifiers modifiers = fieldDeclaration.getMemberDeclarationModifiers();
 
-            while (PARENTS_TO_IGNORE.contains(parentTypeName)) {
-                parent = parent.getParent();
+                List<ValaFieldDeclarationSection> sections = fieldDeclaration.getFieldDeclarationSectionList();
 
-                parentType = parent.getClass().getSimpleName();
-                parentTypeName = parentType.substring(0, parentType.indexOf("Impl"));
+                for (ValaFieldDeclarationSection section : sections) {
+                    if (modifiers != null && modifiers.getText().contains("static")) {
+                        highlight(section.getIdentifier(), annotationHolder, ValaTextAttributeKey.STATIC_VARIABLE);
+                    } else {
+                        highlight(section.getIdentifier(), annotationHolder, ValaTextAttributeKey.INSTANCE_VARIABLE);
+                    }
+                }
+
             }
+            case ValaPropertyDeclaration propertyDeclaration -> {
+                highlight(propertyDeclaration.getIdentifier(), annotationHolder, ValaTextAttributeKey.PROPERTY);
+            }
+            case ValaParameter parameter -> {
+                highlight(parameter.getIdentifier(), annotationHolder, ValaTextAttributeKey.PARAMETER);
+            }
+            case ValaLambdaExpressionParam lambdaExpressionParam -> {
+                highlight(lambdaExpressionParam.getIdentifier(), annotationHolder, ValaTextAttributeKey.PARAMETER);
+            }
+            case ValaLocalVariable localVariable -> {
+                highlight(localVariable.getIdentifier(), annotationHolder, ValaTextAttributeKey.LOCAL_VARIABLE);
+            }
+            case ValaConstantDeclaration constantDeclaration -> {
+                highlight(constantDeclaration.getIdentifier(), annotationHolder, ValaTextAttributeKey.CONSTANT);
+            }
+            case ValaMethodDeclaration methodDeclaration -> {
+                highlight(methodDeclaration.getMember(), annotationHolder, ValaTextAttributeKey.METHOD_DECLARATION);
+            }
+            case ValaSignalDeclaration signalDeclaration -> {
+                highlight(signalDeclaration.getIdentifier(), annotationHolder, ValaTextAttributeKey.SIGNAL);
+            }
+            case ValaCreationMethodDeclaration creationMethodDeclaration -> {
+                highlight(creationMethodDeclaration.getMember(), annotationHolder, ValaTextAttributeKey.CREATION_METHOD);
+            }
+            case ValaDestructorDeclaration destructorDeclaration -> {
+                highlight(destructorDeclaration.getIdentifier(), annotationHolder, ValaTextAttributeKey.DESTRUCTOR);
+            }
+            case ValaDelegateDeclaration delegateDeclaration -> {
+                highlight(delegateDeclaration.getSymbol(), annotationHolder, ValaTextAttributeKey.DELEGATE_NAME);
+            }
+            case ValaNamespaceDeclaration namespaceDeclaration -> {
+                highlight(namespaceDeclaration.getSymbol(), annotationHolder, ValaTextAttributeKey.NAMESPACE_NAME);
+            }
+            case ValaInterfaceDeclaration interfaceDeclaration -> {
+                highlight(interfaceDeclaration.getSymbol(), annotationHolder, ValaTextAttributeKey.INTERFACE_NAME);
+            }
+            case ValaClassDeclaration classDeclaration -> {
+                highlight(classDeclaration.getSymbol(), annotationHolder, ValaTextAttributeKey.CLASS_NAME);
+            }
+            case ValaStructDeclaration structDeclaration -> {
+                highlight(structDeclaration.getSymbol(), annotationHolder, ValaTextAttributeKey.STRUCT_NAME);
+            }
+            case ValaEnumDeclaration enumDeclaration -> {
+                highlight(enumDeclaration.getSymbol(), annotationHolder, ValaTextAttributeKey.ENUM_NAME);
+            }
+            case ValaErrordomainDeclaration errordomainDeclaration -> {
+                highlight(errordomainDeclaration.getSymbol(), annotationHolder, ValaTextAttributeKey.ERRORDOMAIN_NAME);
+            }
+            case ValaErrorcode errorcode -> {
+                highlight(errorcode.getIdentifier(), annotationHolder, ValaTextAttributeKey.ERROR_CODE);
+            }
+            case ValaEnumvalue enumvalue -> {
+                highlight(enumvalue.getIdentifier(), annotationHolder, ValaTextAttributeKey.ENUM_VALUE);
+            }
+            case ValaForeachStatement foreachStatement -> {
+                highlight(foreachStatement.getIdentifier(), annotationHolder, ValaTextAttributeKey.LOCAL_VARIABLE);
+            }
+            case ValaCatchClause catchClause -> {
+                highlight(catchClause.getIdentifier(), annotationHolder, ValaTextAttributeKey.LOCAL_VARIABLE);
+            }
+            case ValaLocalTupleDeclaration localTupleDeclaration -> {
+                highlight(localTupleDeclaration.getMember(), annotationHolder, ValaTextAttributeKey.LOCAL_VARIABLE);
+            }
+            case ValaNamedArgument namedArgument -> {
+                highlight(namedArgument.getIdentifier(), annotationHolder, ValaTextAttributeKey.PARAMETER);
+            }
+            case ValaYieldExpression yieldExpression -> {
+                highlight(yieldExpression.getMember(), annotationHolder, ValaTextAttributeKey.METHOD_CALL);
+            }
+            default -> {
+                return;
+            }
+        }
+    }
 
-            String scopeName = String.format("%s.%s", psiElement.getContainingFile().getName(), namedElement.getName());
+    private void highlightMisc(PsiElement psiElement, AnnotationHolder annotationHolder) {
+        switch (psiElement) {
+            case ValaType type -> {
+                highlight(type.getSymbol(), annotationHolder, ValaTextAttributeKey.TYPE_NAME);
+            }
+            case ValaTypeWeak weakType -> {
+                highlight(weakType.getSymbol(), annotationHolder, ValaTextAttributeKey.TYPE_NAME);
+            }
+            case ValaAttribute attribute -> {
+                highlight(attribute.getIdentifier(), annotationHolder, ValaTextAttributeKey.ATTRIBUTE);
+            }
+            case ValaAttributeArgument attributeArgument -> {
+                highlight(attributeArgument.getIdentifier(), annotationHolder, ValaTextAttributeKey.PARAMETER);
+            }
+            case ValaUsingDirective usingDirective -> {
+                highlight(usingDirective.getSymbol(), annotationHolder, ValaTextAttributeKey.TYPE_NAME);
+            }
+            case ValaMemberInitializer memberInitializer -> {
+                highlight(memberInitializer.getIdentifier(), annotationHolder, ValaTextAttributeKey.OBJECT_INITIALIZER);
+            }
+            default -> {
+                return;
+            }
+        }
+    }
 
-            ValaElementScope scope = new ValaElementScope(
-                namedElement.getName(),
-                typeName,
-                namedElement.getTextRange(),
-                parentTypeName,
-                parent.getTextRange()
-            );
+    private void highlight(PsiElement name, AnnotationHolder annotationHolder, TextAttributesKey attributeKey) {
 
-            if (SCOPE_MAP.containsKey(scopeName)) {
-                SCOPE_MAP.get(scopeName).add(scope);
+        if (name == null) {
+            return;
+        }
+
+        switch (name) {
+            case ValaIdentifier identifier -> {
+                annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
+                    .range(identifier)
+                    .textAttributes(attributeKey)
+                    .create();
+            }
+            case ValaSymbol symbol -> {
+                List<ValaSymbolPart> symbolParts = symbol.getSymbolPartList();
+
+                for (ValaSymbolPart symbolPart : symbolParts) {
+                    annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
+                        .range(symbolPart.getIdentifier())
+                        .textAttributes(attributeKey)
+                        .create();
+                }
+            }
+            case ValaMember member -> {
+                List<ValaMemberPart> memberParts = member.getMemberPartList();
+
+                for (ValaMemberPart memberPart : memberParts) {
+                    annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
+                        .range(memberPart.getIdentifier())
+                        .textAttributes(attributeKey)
+                        .create();
+                }
+            }
+            case ValaSimpleName simpleName -> {
+                annotationHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
+                    .range(simpleName.getIdentifier())
+                    .textAttributes(attributeKey)
+                    .create();
+            }
+            default -> {
+                return;
+            }
+        }
+    }
+
+    private void highlightReferences(ValaSimpleName simpleName, PsiElement resolved, AnnotationHolder annotationHolder) {
+
+        if (PsiTreeUtil.instanceOf(resolved, ValaInterfaceDeclaration.class)) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.INTERFACE_NAME);
+            return;
+        }
+        if (PsiTreeUtil.instanceOf(resolved, ValaClassDeclaration.class)) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.CLASS_NAME);
+            return;
+        }
+        if (PsiTreeUtil.instanceOf(resolved, ValaStructDeclaration.class)) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.STRUCT_NAME);
+            return;
+        }
+        if (PsiTreeUtil.instanceOf(resolved, ValaEnumDeclaration.class)) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.ENUM_NAME);
+            return;
+        }
+        if (PsiTreeUtil.instanceOf(resolved, ValaErrordomainDeclaration.class)) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.ERRORDOMAIN_NAME);
+            return;
+        }
+        if (PsiTreeUtil.instanceOf(resolved, ValaNamespaceDeclaration.class)) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.NAMESPACE_NAME);
+            return;
+        }
+        if (PsiTreeUtil.instanceOf(resolved, ValaDelegateDeclaration.class)) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.DELEGATE_NAME);
+            return;
+        }
+
+        if (PsiTreeUtil.instanceOf(
+            resolved,
+            ValaMethodDeclaration.class,
+            ValaCreationMethodDeclaration.class,
+            ValaDestructorDeclaration.class,
+            ValaYieldExpression.class
+        )) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.METHOD_CALL);
+            return;
+        }
+
+        if (PsiTreeUtil.instanceOf(
+            resolved,
+            ValaLocalVariable.class,
+            ValaCatchClause.class,
+            ValaForeachStatement.class,
+            ValaLocalTupleDeclaration.class
+        )) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.LOCAL_VARIABLE);
+            return;
+        }
+
+        if (PsiTreeUtil.instanceOf(
+            resolved,
+            ValaParameter.class,
+            ValaLambdaExpressionParam.class,
+            ValaNamedArgument.class
+        )) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.PARAMETER);
+            return;
+        }
+
+        if (PsiTreeUtil.instanceOf(resolved, ValaConstantDeclaration.class)) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.CONSTANT);
+            return;
+        }
+
+        if (PsiTreeUtil.instanceOf(resolved, ValaEnumvalue.class)) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.ENUM_VALUE);
+            return;
+        }
+
+        if (PsiTreeUtil.instanceOf(resolved, ValaErrorcode.class)) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.ERROR_CODE);
+            return;
+        }
+
+        if (PsiTreeUtil.instanceOf(resolved, ValaPropertyDeclaration.class)) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.PROPERTY);
+            return;
+        }
+
+        if (PsiTreeUtil.instanceOf(resolved, ValaSignalDeclaration.class)) {
+            highlight(simpleName, annotationHolder, ValaTextAttributeKey.SIGNAL);
+            return;
+        }
+
+        if (resolved instanceof ValaFieldDeclarationSection fieldSection) {
+            ValaFieldDeclaration fieldDeclaration = PsiTreeUtil.getParentOfType(fieldSection, ValaFieldDeclaration.class);
+            ValaMemberDeclarationModifiers modifiers = fieldDeclaration == null
+                ? null
+                : fieldDeclaration.getMemberDeclarationModifiers();
+
+            if (modifiers != null && modifiers.getText().contains("static")) {
+                highlight(simpleName, annotationHolder, ValaTextAttributeKey.STATIC_VARIABLE);
             } else {
-                Set<ValaElementScope> scopeSet = new HashSet<>();
-                scopeSet.add(scope);
-                SCOPE_MAP.put(scopeName, scopeSet);
+                highlight(simpleName, annotationHolder, ValaTextAttributeKey.INSTANCE_VARIABLE);
             }
+            return;
         }
     }
 }

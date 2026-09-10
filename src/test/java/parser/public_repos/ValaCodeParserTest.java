@@ -22,7 +22,8 @@ public class ValaCodeParserTest extends BasePlatformTestCase {
                 "struct_only.vala",
                 "glib-2.0.vapi",
                 "regex.vala",
-                "bug761267-2.vala"
+                "bug761267-2.vala",
+                "readline.vapi"
             )
         );
 

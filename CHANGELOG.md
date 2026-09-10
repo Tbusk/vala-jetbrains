@@ -6,6 +6,25 @@
 
 ### Added
 
+- Added Find Usages, Go to Declaration, and Rename for simple elements in the current file
+- Added separate color settings for classes, structs, enums, errordomains, namespaces, delegates, interfaces, types, properties, signals, creation methods, destructors, static fields, enum values, error codes, and object initializers
+
+### Changed
+
+- Improved the color settings page with grouped declaration colors and a better preview
+- `struct` and `using` no longer treated as allowable identifiers for improved parsing
+- Tweaked the defaults of syntax highlighting colors for some elements to be closer aligned with the platform defaults
+
+### Fixed
+
+- Fixed issues with syntax highlighting not highlighting elements correctly in some cases
+- Fixed issue with `with` statements, so they now require a body
+- Fixed issue with `const` declarations so now any number of them can be declared at once
+
+## [1.3.0]
+
+### Added
+
 - Added GrammarKit Gradle plugin
 - Added support for developing with non-JetBrains IDEs
 - Added developer documentation and guides
