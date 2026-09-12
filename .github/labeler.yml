@@ -1,6 +1,6 @@
 Documentation:
   - changed-files:
-      - any-glob-to-any-file: [ 'docs/**', '*.md' ]
+      - any-glob-to-any-file: [ 'docs/**', 'README.md', 'MarketplaceDescription.md', 'CONTRIBUTING.md', 'CHANGELOG.md' ]
 
 Actions:
   - changed-files:
@@ -9,7 +9,7 @@ Actions:
 Dependencies:
   - head-branch: [ 'dependabot', 'bump' ]
   - changed-files:
-      - any-glob-to-any-file: [ 'jflex/**', 'gradle/**', 'qodana.yml', 'gradlew', 'gradlew.bat' ]
+      - any-glob-to-any-file: [ 'gradle/**', 'gradlew', 'gradlew.bat' ]
 
 License:
   - changed-files:
@@ -17,11 +17,7 @@ License:
 
 Templates:
   - changed-files:
-      - any-glob-to-any-file: [ '.github/ISSUE_TEMPLATE/**', '.github/pull_request_template.md' ]
-
-Samples:
-  - changed-files:
-      - any-glob-to-any-file: 'src/test/vala/samples/**'
+      - any-glob-to-any-file: [ '.github/ISSUE_TEMPLATE/**', '.github/pull_request_template.md', 'src/main/resources/fileTemplates/**' ]
 
 Generated:
   - changed-files:
@@ -29,23 +25,25 @@ Generated:
 
 Configuration:
   - changed-files:
-      - any-glob-to-any-file: [ 'gradle.properties', 'build.gradle', '.gitignore', 'settings.gradle', '.github/labeler.yml', '.github/dependabot.yml', 'MarketplaceDescription.md' ]
+      - any-glob-to-any-file: [ 'gradle.properties', 'build.gradle', '.gitignore', 'settings.gradle', '.github/labeler.yml', '.github/dependabot.yml' ]
 
 Syntax:
   - changed-files:
-      - any-glob-to-any-file: [ '*.bnf', '*.flex' ]
-
-Enhancement:
-  - head-branch: [ '^feature', 'feature', '^feat', 'feat' ]
-
-Change:
-  - head-branch: [ '^change', 'change' ]
-
-Patch:
-  - head-branch: [ '^patch', 'patch' ]
-
-Chore:
-  - head-branch: [ '^chore', 'chore' ]
+      - any-glob-to-any-file: [ '**/*.bnf', '**/*.flex' ]
 
 Test:
-  - head-branch: [ '^test', 'test' ]
+  - head-branch: [ '^test' ]
+  - changed-files:
+      - any-glob-to-any-file: 'src/test/**'
+
+Enhancement:
+  - head-branch: [ '^feat' ]
+
+Change:
+  - head-branch: [ '^change' ]
+
+Patch:
+  - head-branch: [ '^patch' ]
+
+Chore:
+  - head-branch: [ '^chore' ]

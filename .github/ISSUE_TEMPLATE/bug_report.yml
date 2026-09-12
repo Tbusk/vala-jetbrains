@@ -2,10 +2,6 @@ name: Bug report
 description: Create a report to help us improve
 title: "bug: "
 labels: [ "Bug" ]
-assignees:
-  - tbusk
-projects:
-  - "vala-lang/4"
 
 body:
   - type: markdown
@@ -30,28 +26,12 @@ body:
       render: bash
     validations:
       required: false
-  - type: dropdown
+  - type: input
     id: version
     attributes:
       label: Version
       description: What version of the plugin are you using?
-      options:
-        - Latest (if not added)
-        - 1.2.7
-        - 1.2.6
-        - 1.2.5.1-ALPHA
-        - 1.2.5-ALPHA
-        - 1.2.4-ALPHA
-        - 1.2.3-ALPHA
-        - 1.2.2-ALPHA
-        - 1.2.1-ALPHA
-        - 1.2.0-ALPHA
-        - 1.1.3-ALPHA
-        - 1.1.2-ALPHA
-        - 1.1.1-ALPHA
-        - 1.1.0-ALPHA
-        - 1.0.1-ALPHA
-        - 1.0.0-ALPHA
+      placeholder: 1.4.0
     validations:
       required: true
   - type: input
