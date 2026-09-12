@@ -2,10 +2,6 @@ name: Change request
 description: Suggest a change that can help the project
 title: "change: "
 labels: [ "Change Request" ]
-assignees:
-  - tbusk
-projects:
-  - "vala-lang/4"
 
 body:
   - type: markdown
